@@ -3,7 +3,7 @@
 
     <div>
       <b-navbar toggleable="lg" type="dark" variant="primary">
-        <b-navbar-brand href="/">Related Services Scheduler</b-navbar-brand>
+        <router-link tag="b-navbar-brand" to="/">Related Services Scheduler</router-link>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -44,10 +44,44 @@
         </b-collapse>
       </b-navbar>
     </div>
+
+    <template>
+      <b-breadcrumb :items="breadcrumbs"></b-breadcrumb>
+    </template>
+
     <router-view tag="b-container"/>
   </div>
 </template>
 
+<script>
+import { mapState } from 'vuex'
+
+export default {
+  computed: {
+    ...mapState(['breadcrumbs'])
+  }
+}
+</script>
+
 <style>
+.object_display {
+  border: 3px double #ccc;
+  padding: 0.5em;
+}
+.object_display dt {
+  float: left;
+  clear: left;
+  width: 100px;
+  text-align: right;
+  font-weight: bold;
+  color: green;
+}
+.object_display dt::after {
+  content: ":";
+}
+.object_display dd {
+  margin: 0 0 0 110px;
+  padding: 0 0 0.5em 0;
+}
 
 </style>

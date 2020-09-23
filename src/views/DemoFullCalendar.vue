@@ -3,7 +3,10 @@ import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { INITIAL_EVENTS, createEventId } from '../event-utils'
+import {
+  INITIAL_EVENTS,
+  createEventId
+} from '../event-utils'
 export default {
   components: {
     FullCalendar // make the <FullCalendar> tag available
@@ -40,6 +43,19 @@ export default {
       currentEvents: []
     }
   },
+  created() {
+      //now set the vuex breadcrumbs state so breadcrumbs are updated
+      this.$store.dispatch('replaceBreadcrumbs', [
+         {
+          text: 'Home',
+          to: {name: 'Home'}
+        },
+        {
+          text: 'Full Calendar',
+          active: true
+        }
+      ]);
+  },
   methods: {
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property
@@ -71,45 +87,41 @@ export default {
 </script>
 
 <template>
-  <div class='demo-app'>
-    <div class='demo-app-sidebar'>
-      <div class='demo-app-sidebar-section'>
-        <h2>Instructions</h2>
-        <ul>
-          <li>Select dates and you will be prompted to create a new event</li>
-          <li>Drag, drop, and resize events</li>
-          <li>Click an event to delete it</li>
-        </ul>
-      </div>
-      <div class='demo-app-sidebar-section'>
-        <label>
-          <input
-            type='checkbox'
-            :checked='calendarOptions.weekends'
-            @change='handleWeekendsToggle'
-          />
-          toggle weekends
-        </label>
-      </div>
-      <div class='demo-app-sidebar-section'>
-        <h2>All Events ({{ currentEvents.length }})</h2>
-        <ul>
-          <li v-for='event in currentEvents' :key='event.id'>
-            <b>{{ event.startStr }}</b>
-            <i>{{ event.title }}</i>
-          </li>
-        </ul>
-      </div>
+<div class='demo-app'>
+  <div class='demo-app-sidebar'>
+    <div class='demo-app-sidebar-section'>
+      <h2>Instructions</h2>
+      <ul>
+        <li>Select dates and you will be prompted to create a new event</li>
+        <li>Drag, drop, and resize events</li>
+        <li>Click an event to delete it</li>
+      </ul>
     </div>
-    <div class='demo-app-main'>
-      <FullCalendar class='demo-app-calendar' :options='calendarOptions'>
-        <template v-slot:eventContent='arg'>
-          <b>{{ arg.timeText }}</b>
-          <i>{{ arg.event.title }}</i>
-        </template>
-      </FullCalendar>
+    <div class='demo-app-sidebar-section'>
+      <label>
+        <input type='checkbox' :checked='calendarOptions.weekends' @change='handleWeekendsToggle' />
+        toggle weekends
+      </label>
+    </div>
+    <div class='demo-app-sidebar-section'>
+      <h2>All Events ({{ currentEvents.length }})</h2>
+      <ul>
+        <li v-for='event in currentEvents' :key='event.id'>
+          <b>{{ event.startStr }}</b>
+          <i>{{ event.title }}</i>
+        </li>
+      </ul>
     </div>
   </div>
+  <div class='demo-app-main'>
+    <FullCalendar class='demo-app-calendar' :options='calendarOptions'>
+      <template v-slot:eventContent='arg'>
+        <b>{{ arg.timeText }}</b>
+        <i>{{ arg.event.title }}</i>
+      </template>
+    </FullCalendar>
+  </div>
+</div>
 </template>
 
 <style lang='css'>

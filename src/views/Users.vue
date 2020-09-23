@@ -83,6 +83,18 @@ export default {
 
       this.loading = false;
       this.userlist = userlist;
+
+      //now set the vuex breadcrumbs state so breadcrumbs are updated
+      this.$store.dispatch('replaceBreadcrumbs', [
+        {
+          text: 'Home',
+          to: {name: 'Home'}
+        },
+        {
+          text: 'Users',
+          active: true
+        }
+      ]);
     }
   }
 }

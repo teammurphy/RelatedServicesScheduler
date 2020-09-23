@@ -13,7 +13,7 @@
   <div v-if="caseload" class="content">
     <h3>Caseload</h3>
 
-    <dl>
+    <dl class="object_display">
       <div v-for="(value, index) in caseload" v-bind:key="index">
         <dt>{{ index }}</dt>
         <dd>{{ value }}</dd>
@@ -86,23 +86,4 @@ export default {
 </script>
 
 <style scoped>
-dl {
-  border: 3px double #ccc;
-  padding: 0.5em;
-}
-dt {
-  float: left;
-  clear: left;
-  width: 100px;
-  text-align: right;
-  font-weight: bold;
-  color: green;
-}
-dt::after {
-  content: ":";
-}
-dd {
-  margin: 0 0 0 110px;
-  padding: 0 0 0.5em 0;
-}
 </style>

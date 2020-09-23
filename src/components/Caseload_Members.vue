@@ -12,11 +12,13 @@
 
   <div v-if="members" class="content">
     <h3>Members</h3>
-    <b-table striped hover :items="members"></b-table>
-    <p>
-      note - we can manipulate the members array to give us linked rows, color
-      unmet goals red, ....  see https://bootstrap-vue.org/docs/components/table
-    </p>
+    <b-table striped hover :items="members">
+      <template v-slot:cell(student_id)="data">
+          <router-link :to="'/student/'+data.item.student_id">
+            {{ data.item.student_id }}
+          </router-link>
+        </template>
+    </b-table>
   </div>
 
 </div>
@@ -28,7 +30,7 @@ export default {
   props: {
     caseloadId: String
   },
-  data () {
+  data() {
     return {
       members: null,
       loading: false,
@@ -60,8 +62,7 @@ export default {
       //let goals = await res.json();
 
       //fake Members
-      const members = [
-        {
+      const members = [{
           id: "001",
           caseload_id: "001",
           student_id: "001"

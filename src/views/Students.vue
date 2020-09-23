@@ -55,6 +55,18 @@ export default {
       const studentlist = await res.json();
       this.loading = false;
       this.studentlist = studentlist;
+
+      //now set the vuex breadcrumbs state so breadcrumbs are updated
+      this.$store.dispatch('replaceBreadcrumbs', [
+        {
+          text: 'Home',
+          to: {name: 'Home'}
+        },
+        {
+          text: 'Students',
+          active: true
+        }
+      ]);
     }
   }
 }

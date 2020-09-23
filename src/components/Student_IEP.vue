@@ -11,7 +11,13 @@
   </b-alert>
 
   <div v-if="iep" class="content">
-    <h2>{{ iep.start_date }} - {{ iep.end_date}}</h2>
+    <h2>IEP</h2>
+    <dl class="object_display">
+      <div v-for="(value, index) in iep" v-bind:key="index">
+        <dt>{{ index }}</dt>
+        <dd>{{ value }}</dd>
+      </div>
+    </dl>
 
     <div class="accordion" role="tablist">
       <b-card no-body class="mb-1">

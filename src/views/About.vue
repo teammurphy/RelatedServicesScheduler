@@ -51,3 +51,21 @@
   </ul>
 </b-container>
 </template>
+
+<script>
+  export default {
+    created() {
+      //now set the vuex breadcrumbs state so breadcrumbs are updated
+      this.$store.dispatch('replaceBreadcrumbs', [
+        {
+          text: 'Home',
+          to: {name: 'Home'}
+        },
+        {
+          text: 'About',
+          active: true
+        }
+      ]);
+    }
+  }
+</script>
