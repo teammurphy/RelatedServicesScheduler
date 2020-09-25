@@ -10,17 +10,19 @@
     {{ error }}
   </b-alert>
 
-  <div v-if="caseload" class="content">
+  <div v-if="caseloads" class="content">
     <h3>Caseload</h3>
 
+    <b-form-select v-model="caseloadId" :options="caseloads"></b-form-select>
+
     <dl class="object_display">
-      <div v-for="(value, index) in caseload" v-bind:key="index">
+      <div v-for="(value, index) in caseloads[caseloadId]" v-bind:key="index">
         <dt>{{ index }}</dt>
         <dd>{{ value }}</dd>
       </div>
     </dl>
 
-    <Caseload_Members v-bind:caseloadId="this.caseload.id"/>
+    <Caseload_Members v-bind:caseloadId="this.caseloadId"/>
   </div>
 
 </div>
@@ -39,7 +41,9 @@ export default {
   },
   data () {
     return {
-      caseload: null,
+      //caseloadId is the selected caseload
+      caseloadId: null,
+      caseloads: null,
       loading: false,
       error: null
     }
@@ -59,31 +63,26 @@ export default {
 
       //see https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
       //for more complete example with using headers for authorization
-      //use this.iep_id to pass iep_id as part of url
-      //alert("Id: " + this.iep_id);
+      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/caseloads/byUserId/' + this.userId;
+      // const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: {
+          'Content-Type':'application/json'
+        }
+      });
+      const caseloads = await res.json();
 
-      // in real life we would pass a student id and return back only the most recent iep
-      //const res = await fetch('https://488c64d2-8c86-4369-990c-0fff43b1145c.mock.pstmn.io/ieps?student_id=' + this.studentId);
-      //const ieps = await res.json();
-      // for the mock data we are going to just grab the first iep in feed
-      //const iep = ieps[0];
-
-      //fake Caseload
-      const caseload = {
-        id: "001",
-        user_id: "001",
-        title: "Summer 2021",
-        service_area: "Speech",
-        start_date: "2020-09-15T00:00:00Z",
-        end_date: "2021-02-15T00:00:00Z"
-      };
-
+      //add value and text properties to caseload array so we can use it in the select easily
+      caseloads.forEach(function(obj){
+        obj.text = obj.title;
+        obj.value = obj.id.toString();
+      });
+      
       this.loading = false;
-      this.caseload = caseload;
+      this.caseloads = caseloads;
+      //set the first caseload in list as active
+      this.caseloadId = caseloads[0].id;
     }
   }
 }
 </script>
-
-<style scoped>
-</style>

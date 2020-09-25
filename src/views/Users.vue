@@ -1,6 +1,5 @@
 <template>
   <b-container class="users">
-    <h1>Users</h1>
 
     <b-alert show v-if="loading" class="loading">
       <b-spinner label="Loading..." class="loading"></b-spinner>
@@ -16,7 +15,7 @@
       <ul>
         <li v-for="item in userlist" :key="item.id">
           <router-link :to="'/user/'+item.id">
-            {{ item.first_name }} {{ item.last_name }}
+            {{ item.firstName }} {{ item.lastName }}
           </router-link>
         </li>
       </ul>
@@ -61,25 +60,13 @@ export default {
 
       //see https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
       //for more complete example with using headers for authorization
-      //const res = await fetch('https://488c64d2-8c86-4369-990c-0fff43b1145c.mock.pstmn.io/students');
-      //const userlist = await res.json();
-
-      const userlist = [
-        {
-          id: "001",
-          username: "tom@wokeupdead.com",
-          first_name: "Thomas",
-          last_name: "Murphy",
-          last_login: "2021-02-15T00:00:00Z"
-        },
-        {
-          id: "002",
-          username: "caroline@teanga.com",
-          first_name: "Caroline",
-          last_name: "Murphy",
-          last_login: "2021-02-15T05:50:10Z"
+      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/users';
+      const res = await fetch(url, {
+        headers: {
+          'Content-Type':'application/json'
         }
-      ];
+      });
+      const userlist = await res.json();
 
       this.loading = false;
       this.userlist = userlist;
@@ -98,5 +85,4 @@ export default {
     }
   }
 }
-
 </script>

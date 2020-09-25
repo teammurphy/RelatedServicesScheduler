@@ -11,12 +11,7 @@
   </b-alert>
 
   <div v-if="goals" class="content">
-    <h3>Goals</h3>
     <b-table striped hover :items="goals"></b-table>
-    <p>
-      note - we can manipulate the goals array to give us linked rows, color
-      unmet goals red, ....  see https://bootstrap-vue.org/docs/components/table
-    </p>
   </div>
 
   <div v-else class="content">
@@ -53,35 +48,14 @@ export default {
 
       //see https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
       //for more complete example with using headers for authorization
-      //use this.iep_id to pass iep_id as part of url
-      //alert("Id: " + this.iep_id);
-
-      //note the fetch should be hitting a goal feed, not iep
-      const res = await fetch('https://488c64d2-8c86-4369-990c-0fff43b1145c.mock.pstmn.io/ieps?iep_id=' + this.IEPId);
-
-      //should be const, but as we are overwriting for testing
-      let goals = await res.json();
-      this.loading = false;
-
-      //now overwrite goals for testing
-      goals = [
-        {
-          id: "001",
-          iep_id: "001",
-          goal: "To make the largest spitball possible",
-          criteria: "By wet weight - including spit",
-          method: "Place on scale - duh",
-          schedule: "once per month"
-        },
-        {
-          id: "002",
-          iep_id: "001",
-          goal: "To touch elbow to nose",
-          criteria: "mm from nose",
-          method: "with cloth ruler - duh",
-          schedule: "once per week"
+      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/goals/byIEPId/' + this.IEPId;
+      // const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: {
+          'Content-Type':'application/json'
         }
-      ];
+      });
+      const goals = await res.json();
 
       this.loading = false;
       this.goals = goals;
@@ -89,6 +63,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-</style>

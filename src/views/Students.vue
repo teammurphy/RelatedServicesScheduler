@@ -14,9 +14,9 @@
     <div v-if="studentlist" class="content">
 
       <b-table striped hover :items="studentlist">
-        <template v-slot:cell(first_name)="data">
+        <template v-slot:cell(firstName)="data">
           <router-link :to="'/student/'+data.item.id">
-            {{ data.item.first_name }}
+            {{ data.item.firstName }}
           </router-link>
         </template>
       </b-table>
@@ -51,10 +51,16 @@ export default {
 
       //see https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
       //for more complete example with using headers for authorization
-      const res = await fetch('https://488c64d2-8c86-4369-990c-0fff43b1145c.mock.pstmn.io/students');
+      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/students';
+      const res = await fetch(url, {
+        headers: {
+          'Content-Type':'application/json'
+        }
+      });
       const studentlist = await res.json();
       this.loading = false;
       this.studentlist = studentlist;
+
 
       //now set the vuex breadcrumbs state so breadcrumbs are updated
       this.$store.dispatch('replaceBreadcrumbs', [

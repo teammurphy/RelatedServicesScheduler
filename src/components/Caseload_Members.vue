@@ -11,11 +11,11 @@
   </b-alert>
 
   <div v-if="members" class="content">
-    <h3>Members</h3>
+    <h3>Caselist</h3>
     <b-table striped hover :items="members">
-      <template v-slot:cell(student_id)="data">
-          <router-link :to="'/student/'+data.item.student_id">
-            {{ data.item.student_id }}
+      <template v-slot:cell(studentId)="data">
+          <router-link :to="'/student/'+data.item.studentId">
+            {{ data.item.studentId }}
           </router-link>
         </template>
     </b-table>
@@ -52,34 +52,20 @@ export default {
 
       //see https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
       //for more complete example with using headers for authorization
-      //use this.iep_id to pass iep_id as part of url
-      //alert("Id: " + this.iep_id);
-
-      //note the fetch should be hitting a goal feed, not iep
-      //const res = await fetch('https://488c64d2-8c86-4369-990c-0fff43b1145c.mock.pstmn.io/ieps?iep_id=' + this.IEPId);
-
-      //should be const, but as we are overwriting for testing
-      //let goals = await res.json();
-
-      //fake Members
-      const members = [{
-          id: "001",
-          caseload_id: "001",
-          student_id: "001"
-        },
-        {
-          id: "002",
-          caseload_id: "001",
-          student_id: "002"
+      //says by userId, but userId - caseloadId for now
+      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/cases/byUserId/' + this.caseloadId;
+      const res = await fetch(url, {
+        headers: {
+          'Content-Type':'application/json'
         }
-      ];
+      });
+      const caselist = await res.json();
+      this.loading = false;
+      this.caselist = caselist;
 
       this.loading = false;
-      this.members = members;
+      this.members = caselist;
     }
   }
 }
 </script>
-
-<style scoped>
-</style>

@@ -11,7 +11,14 @@
     </b-alert>
 
     <div v-if="user" class="content">
-      <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+      <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+
+      <dl class="object_display">
+        <div v-for="(value, index) in user" v-bind:key="index">
+          <dt>{{ index }}</dt>
+          <dd>{{ value }}</dd>
+        </div>
+      </dl>
     </div>
 
     <User_Caseload v-bind:userId="this.userId"/>
@@ -52,20 +59,13 @@ export default {
 
       //see https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
       //for more complete example with using headers for authorization
-      //use this.userId to pass userId as part of url
-      //alert("Id: " + this.userId);
-      //real fetch would pass userId
-      //const res = await fetch('https://488c64d2-8c86-4369-990c-0fff43b1145c.mock.pstmn.io');
-      //const user = await res.json();
-
-      //fake user
-      const user = {
-        id: "001",
-        username: "tom@wokeupdead.com",
-        first_name: "Thomas",
-        last_name: "Murphy",
-        last_login: "2021-02-15T00:00:00Z"
-      };
+      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/user/' + this.userId;
+      const res = await fetch(url, {
+        headers: {
+          'Content-Type':'application/json'
+        }
+      });
+      const user = await res.json();
 
       this.loading = false;
       this.user = user;
@@ -81,7 +81,7 @@ export default {
           to: {name: 'Users'}
         },
         {
-          text: user.first_name + " " + user.last_name,
+          text: user.firstName + " " + user.lastName,
           active: true
         }
       ]);

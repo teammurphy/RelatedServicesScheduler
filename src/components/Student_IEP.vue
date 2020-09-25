@@ -10,10 +10,13 @@
     {{ error }}
   </b-alert>
 
-  <div v-if="iep" class="content">
+  <div v-if="ieps" class="content">
     <h2>IEP</h2>
+
+    <b-form-select v-model="iepId" :options="ieps"></b-form-select>
+
     <dl class="object_display">
-      <div v-for="(value, index) in iep" v-bind:key="index">
+      <div v-for="(value, index) in ieps[iepId]" v-bind:key="index">
         <dt>{{ index }}</dt>
         <dd>{{ value }}</dd>
       </div>
@@ -27,7 +30,7 @@
         <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
           <b-card-body>
             <b-card-text>
-              <IEP_Mandates v-bind:IEPId="this.iep.id"/>
+              <IEP_Mandates v-bind:IEPId="this.iepId"/>
             </b-card-text>
           </b-card-body>
         </b-collapse>
@@ -40,7 +43,7 @@
         <b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
           <b-card-body>
             <b-card-text>
-              <IEP_Goals v-bind:IEPId="this.iep.id"/>
+              <IEP_Goals v-bind:IEPId="this.iepId"/>
             </b-card-text>
           </b-card-body>
         </b-collapse>
@@ -70,7 +73,8 @@ export default {
   },
   data () {
     return {
-      iep: null,
+      ieps: null,
+      iepId: null,
       loading: false,
       error: null
     }
@@ -90,23 +94,25 @@ export default {
 
       //see https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
       //for more complete example with using headers for authorization
-      //use this.iep_id to pass iep_id as part of url
-      //alert("Id: " + this.iep_id);
-
-      // in real life we would pass a student id and return back only the most recent iep
-      const res = await fetch('https://488c64d2-8c86-4369-990c-0fff43b1145c.mock.pstmn.io/ieps?student_id=' + this.studentId);
+      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/ieps/byStudentId/' + this.studentId;
+      const res = await fetch(url, {
+        headers: {
+          'Content-Type':'application/json'
+        }
+      });
       const ieps = await res.json();
-      // for the mock data we are going to just grab the first iep in feed
-      const iep = ieps[0];
 
+      //add value and text properties to iep array so we can use it in the select easily
+      ieps.forEach(function(obj){
+        obj.text = obj.startDate + " - " + obj.endDate;
+        obj.value = obj.id.toString();
+      });
+      
       this.loading = false;
-      this.iep = iep;
-      //this.iepID = "009";
+      this.ieps = ieps;
+      //set the first iep in list as active
+      this.iepId = ieps[0].id;
     }
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>
