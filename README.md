@@ -22,7 +22,8 @@ caseloads and insure compliance.
 ## Built With
 * [Vue.js](https://vuejs.org)
 * [FullCalendar](https://fullcalendar.io)
-* [BootstrapVue](https://bootstrap-vue.org/))
+* [BootstrapVue](https://bootstrap-vue.org/)
+* [SwaggerHub](https://swagger.io/tools/swaggerhub/) - api development and mocking
 * [Render] (https://render.com/) - hosting demo
 
 <!-- PROJECT SETUP -->
