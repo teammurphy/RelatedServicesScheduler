@@ -12,6 +12,8 @@
 
   <div v-if="members" class="content">
     <h3>Caselist</h3>
+    
+    <b-button variant="primary" to="/mandate_scheduler/001">Mandate Scheduler</b-button>
     <b-table striped hover :items="members">
       <template v-slot:cell(studentId)="data">
           <router-link :to="'/student/'+data.item.studentId">
@@ -28,7 +30,7 @@
 export default {
   name: 'Caseload_Members',
   props: {
-    caseloadId: String
+    caseloadId: Number
   },
   data() {
     return {

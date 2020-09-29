@@ -40,7 +40,7 @@ export default {
       user: null,
       error: null,
       loading: false,
-      userId: this.$route.params.userId
+      userId: parseInt(this.$route.params.userId)
     }
   },
   created () {

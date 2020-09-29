@@ -23,6 +23,7 @@
     </dl>
 
     <div class="accordion" role="tablist">
+
       <b-card no-body class="mb-1">
         <b-card-header header-tag="header" class="p-1" role="tab">
           <b-button block v-b-toggle.accordion-1 variant="info">Mandates</b-button>
@@ -30,7 +31,7 @@
         <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
           <b-card-body>
             <b-card-text>
-              <IEP_Mandates v-bind:IEPId="this.iepId"/>
+              <IEP_Mandates v-bind:iepId="this.iepId"/>
             </b-card-text>
           </b-card-body>
         </b-collapse>
@@ -43,11 +44,25 @@
         <b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
           <b-card-body>
             <b-card-text>
-              <IEP_Goals v-bind:IEPId="this.iepId"/>
+              <IEP_Goals v-bind:iepId="this.iepId"/>
             </b-card-text>
           </b-card-body>
         </b-collapse>
       </b-card>
+
+      <b-card no-body class="mb-1">
+        <b-card-header header-tag="header" class="p-1" role="tab">
+          <b-button block v-b-toggle.accordion-3 variant="info">Calendar</b-button>
+        </b-card-header>
+        <b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
+          <b-card-body>
+            <b-card-text>
+              <h1>Calendar_Generic v-bind:eventSources="this.eventSources"/</h1>
+            </b-card-text>
+          </b-card-body>
+        </b-collapse>
+      </b-card>
+
     </div>
 
   </div>
@@ -61,15 +76,20 @@
 <script>
 import IEP_Mandates from '@/components/IEP_Mandates.vue'
 import IEP_Goals from '@/components/IEP_Goals.vue'
+//import Calendar_Generic from '@/components/Calendar_Generic.vue'
 
 export default {
   name: 'Student_IEP',
   components: {
     IEP_Mandates,
     IEP_Goals
+    //,
+    //Calendar_Generic
   },
   props: {
-    studentId: String
+    studentId: Number
+    //,
+    //  eventSources: [String]
   },
   data () {
     return {

@@ -6,7 +6,7 @@ import Student from '../views/Student.vue'
 import Users from '../views/Users.vue'
 import User from '../views/User.vue'
 import DemoFullCalendar from '../views/DemoFullCalendar.vue'
-import DemoMandateScheduler from '../views/DemoMandateScheduler.vue'
+import MandateScheduler from '../views/MandateScheduler.vue'
 
 Vue.use(VueRouter)
 
@@ -21,9 +21,9 @@ const routes = [{
     component: DemoFullCalendar
   },
   {
-    path: '/demoMandateScheduler',
-    name: 'DemoMandateScheduler',
-    component: DemoMandateScheduler
+    path: '/mandate_scheduler/:caseloadId',
+    name: 'MandateScheduler',
+    component: MandateScheduler
   },
   {
     path: '/students',

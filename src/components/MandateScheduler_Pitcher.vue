@@ -1,22 +1,27 @@
 <template>
-<div class="mandateScheduler_pitcher" id="planned-tasks">
-      <h3>draggable</h3>
-      <div  class="row planned-tasks">
-        <div class="col-md-3 col-sm-6">
-          <span class="fc-event">Task 1</span>
-        </div>
-        <div class="col-md-3 col-sm-6">
-          <span class="fc-event">Task 2</span>
-        </div>
-      </div>
-
-      <b-card title="card title">
-        <b-button-group vertical id="make-draggable-container">
-          <b-button variant="info" class="make-draggable" data-mandateId="001">Top</b-button>
-          <b-button variant="info" class="make-draggable" data-mandateId="1111">MiddleMiddle</b-button>
-          <b-button variant="info" class="make-draggable" data-mandateId="222">Bottom</b-button>
-        </b-button-group>
-      </b-card>
+<div class="mandateScheduler_pitcher">
+  <h3>Unmet mandates</h3>
+  <div>
+    <!--  v-bind:key="pitch.studentId" -->
+    <div v-for="pitch in pitchData" v-bind:key="pitch.studentId">
+      <strong>{{ pitch.studentName }}</strong>
+      <b-list-group>
+        <b-list-group-item 
+          variant="primary" 
+          v-for="mandate in pitch.mandates" 
+          v-bind:key="mandate.mandateId" 
+          class="make-draggable"
+          :data-mandateId=mandate.mandateId
+          :data-periodicity=mandate.periodicity
+          :data-frequency=mandate.frequency
+          :data-service=mandate.service
+          :data-duration=mandate.duration
+          :data-title=mandate.title>
+            {{ mandate.title }}
+        </b-list-group-item>
+      </b-list-group>
+    </div>
+  </div>
 </div>
 </template>
 
@@ -25,28 +30,23 @@ import { Draggable } from '@fullcalendar/interaction';
 
 export default {
   props: {
-    userId: String
+    userId: Number
   },
   data() {
     return {
       pitchData: [
-        {studentName: "Fred Jones", studentId: "001", 
+        {studentName: "Fred Jones", studentId: 1, 
           mandates: [
-            {title: "3x30x3", mandateId: "001", duration: "00:30"},
-            {title: "1x30x1", mandateId: "1111", duration:"00:30"}
+            {title: "3x30x3", mandateId: 1, duration: "00:30", periodicity: "weekly", frequency: 3, service: "Speech"},
+            {title: "1x60x1", mandateId: 1111, duration:"01:00", periodicity: "weekly", frequency: 3, service: "Speech"}
           ]
         },
-        {studentName: "Mary Moore", studentId: "002", 
+        {studentName: "Mary Moore", studentId: 2, 
           mandates: [
-            {title: "2x30x3", mandateId: "333", duration: "00:30"},
-            {title: "1x30x2", mandateId: "131", duration:"00:30"}
+            {title: "2x30x3", mandateId: 333, duration: "00:30", periodicity: "weekly", frequency: 3, service: "Speech"},
+            {title: "1x30x2", mandateId: 131, duration:"00:30", periodicity: "weekly", frequency: 3, service: "Speech"}
           ]
         }
-      ],
-      events: [
-        {id: "001", title: "bogus", start: "2020-09-16T13:00:00"},
-          {id: "002", title: "bogus", start: "2020-09-16T10:00:00"},
-          {id: "003", title: "bogus", start: "2020-09-16T16:00:00"}
       ]
     }
   },
@@ -80,10 +80,13 @@ export default {
       const nodeList = document.querySelectorAll(".make-draggable");
       nodeList.forEach((node) => {
         new Draggable(node, {
+          eventData: node.dataset
+          /*
           eventData: {
             title: node.innerText,
-            wookie: "blah"
+            payload: node.dataset
           }
+          */
         });
         
       });

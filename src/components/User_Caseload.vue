@@ -37,7 +37,7 @@ export default {
     Caseload_Members
   },
   props: {
-    userId: String
+    userId: Number
   },
   data () {
     return {

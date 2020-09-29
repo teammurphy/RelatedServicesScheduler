@@ -38,7 +38,7 @@ export default {
       student: null,
       error: null,
       loading: false,
-      studentId: this.$route.params.studentId
+      studentId: parseInt(this.$route.params.studentId)
     }
   },
   created () {

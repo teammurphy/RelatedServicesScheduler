@@ -28,7 +28,7 @@
 export default {
   name: 'IEP_Mandates',
   props: {
-    IEPId: String
+    iepId: Number
   },
   data () {
     return {
@@ -52,7 +52,7 @@ export default {
 
       //see https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
       //for more complete example with using headers for authorization
-      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/mandates/byIEPId/' + this.IEPId;
+      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/mandates/byIEPId/' + this.iepId;
       // const res = await fetch(url);
       const res = await fetch(url, {
         headers: {

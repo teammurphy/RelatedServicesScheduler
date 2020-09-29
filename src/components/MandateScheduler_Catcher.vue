@@ -15,7 +15,7 @@ export default {
     FullCalendar // make the <FullCalendar> tag available
   },
   props: {
-    userId: String
+    userId: Number
   },
   data() {
     return {
