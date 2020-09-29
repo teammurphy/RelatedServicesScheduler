@@ -11,6 +11,7 @@
       {{ error }}
     </b-alert>
 
+    <Student_Create_Modal/>
     <div v-if="studentlist" class="content">
 
       <b-table striped hover :items="studentlist">
@@ -27,7 +28,12 @@
 </template>
 
 <script>
+import Student_Create_Modal from '@/components/Student_Create_Modal.vue'
+
 export default {
+  components: {
+    Student_Create_Modal
+  },
   data () {
     return {
       loading: false,

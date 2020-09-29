@@ -2,7 +2,6 @@
 <div class="mandateScheduler_pitcher">
   <h3>Unmet mandates</h3>
   <div>
-    <!--  v-bind:key="pitch.studentId" -->
     <div v-for="pitch in pitchData" v-bind:key="pitch.studentId">
       <strong>{{ pitch.studentName }}</strong>
       <b-list-group>
