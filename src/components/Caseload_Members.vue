@@ -7,7 +7,7 @@
   </b-alert>
 
   <b-alert v-if="error" class="error" variant="danger" show>
-    {{ error }}
+    {{ error.name }} - {{ error.message }}
   </b-alert>
 
   <div v-if="members" class="content">
@@ -52,21 +52,28 @@ export default {
       this.error = this.members = null
       this.loading = true
 
-      //see https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
-      //for more complete example with using headers for authorization
-      //says by userId, but userId - caseloadId for now
       const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/cases/byUserId/' + this.caseloadId;
-      const res = await fetch(url, {
-        headers: {
-          'Content-Type':'application/json'
+      try {
+        const response = await fetch(url, {
+          headers: {
+            'Content-Type':'application/json'
+          }
+        });
+        if (!response.ok) {
+          //we got response - but not one we like - like a 404 or something
+          throw new Error({
+            name: response.status, 
+            message: response.statusText
+          });
         }
-      });
-      const caselist = await res.json();
-      this.loading = false;
-      this.caselist = caselist;
-
-      this.loading = false;
-      this.members = caselist;
+        //good response, now lets try get the payload
+        const data = await response.json();
+        this.members = data;
+      } catch(error) {
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
     }
   }
 }

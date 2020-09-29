@@ -7,7 +7,7 @@
   </b-alert>
 
   <b-alert v-if="error" class="error" variant="danger" show>
-    {{ error }}
+    {{ error.name }} - {{ error.message }}
   </b-alert>
 
   <div v-if="ieps" class="content">
@@ -112,26 +112,35 @@ export default {
       this.error = this.iep = null
       this.loading = true
 
-      //see https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
-      //for more complete example with using headers for authorization
       const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/ieps/byStudentId/' + this.studentId;
-      const res = await fetch(url, {
-        headers: {
-          'Content-Type':'application/json'
+      try {
+        const response = await fetch(url, {
+          headers: {
+            'Content-Type':'application/json'
+          }
+        });
+        if (!response.ok) {
+          //we got response - but not one we like - like a 404 or something
+          throw new Error({
+            name: response.status, 
+            message: response.statusText
+          });
         }
-      });
-      const ieps = await res.json();
-
-      //add value and text properties to iep array so we can use it in the select easily
-      ieps.forEach(function(obj){
-        obj.text = obj.startDate + " - " + obj.endDate;
-        obj.value = obj.id.toString();
-      });
-      
-      this.loading = false;
-      this.ieps = ieps;
-      //set the first iep in list as active
-      this.iepId = ieps[0].id;
+        //good response, now lets try get the payload
+        const ieps = await response.json();
+        //add value and text properties to iep array so we can use it in the select easily
+        ieps.forEach(function(obj){
+          obj.text = obj.startDate + " - " + obj.endDate;
+          obj.value = obj.id.toString();
+        });
+        this.ieps = ieps;
+        //set the first iep in list as active
+        this.iepId = ieps[0].id;
+      } catch(error) {
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
     }
   }
 }

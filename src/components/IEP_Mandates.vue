@@ -7,7 +7,7 @@
   </b-alert>
 
   <b-alert v-if="error" class="error" variant="danger" show>
-    {{ error }}
+    {{ error.name }} - {{ error.message }}
   </b-alert>
 
   <div v-if="mandates" class="content">
@@ -50,19 +50,28 @@ export default {
       this.error = this.mandates = null
       this.loading = true
 
-      //see https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
-      //for more complete example with using headers for authorization
       const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/mandates/byIEPId/' + this.iepId;
-      // const res = await fetch(url);
-      const res = await fetch(url, {
-        headers: {
-          'Content-Type':'application/json'
+      try {
+        const response = await fetch(url, {
+          headers: {
+            'Content-Type':'application/json'
+          }
+        });
+        if (!response.ok) {
+          //we got response - but not one we like - like a 404 or something
+          throw new Error({
+            name: response.status, 
+            message: response.statusText
+          });
         }
-      });
-      const mandates = await res.json();
-
-      this.loading = false;
-      this.mandates = mandates;
+        //good response, now lets try get the payload
+        const data = await response.json();
+        this.mandates = data;
+      } catch(error) {
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
     }
   }
 }

@@ -7,7 +7,7 @@
   </b-alert>
 
   <b-alert v-if="error" class="error" variant="danger" show>
-    {{ error }}
+    {{ error.name }} - {{ error.message }}
   </b-alert>
 
   <div v-if="caseloads" class="content">
@@ -61,27 +61,35 @@ export default {
       this.error = this.caseload = null
       this.loading = true
 
-      //see https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
-      //for more complete example with using headers for authorization
       const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/caseloads/byUserId/' + this.userId;
-      // const res = await fetch(url);
-      const res = await fetch(url, {
-        headers: {
-          'Content-Type':'application/json'
+      try {
+        const response = await fetch(url, {
+          headers: {
+            'Content-Type':'application/json'
+          }
+        });
+        if (!response.ok) {
+          //we got response - but not one we like - like a 404 or something
+          throw new Error({
+            name: response.status, 
+            message: response.statusText
+          });
         }
-      });
-      const caseloads = await res.json();
-
-      //add value and text properties to caseload array so we can use it in the select easily
-      caseloads.forEach(function(obj){
-        obj.text = obj.title;
-        obj.value = obj.id.toString();
-      });
-      
-      this.loading = false;
-      this.caseloads = caseloads;
-      //set the first caseload in list as active
-      this.caseloadId = caseloads[0].id;
+        //good response, now lets try get the payload
+        const data = await response.json();
+        //add value and text properties to caseload array so we can use it in the select easily
+        data.forEach(function(obj){
+          obj.text = obj.title;
+          obj.value = obj.id.toString();
+        });
+        this.caseloads = data;
+        //set the first caseload in list as active
+        this.caseloadId = data[0].id;
+      } catch(error) {
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
     }
   }
 }

@@ -7,7 +7,7 @@
   </b-alert>
 
   <b-alert v-if="error" class="error" variant="danger" show>
-    {{ error }}
+    {{ error.name }} - {{ error.message }}
   </b-alert>
 
   <div v-if="events" class="content">

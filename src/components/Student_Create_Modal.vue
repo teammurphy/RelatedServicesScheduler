@@ -22,7 +22,7 @@
         </b-alert>
 
         <b-alert v-if="error" class="error" variant="danger" show>
-            {{ error }}
+            {{ error.name }} - {{ error.message }}
         </b-alert>
 
         <form ref="form" @submit.stop.prevent="handleSubmit">

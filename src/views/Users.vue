@@ -7,7 +7,7 @@
     </b-alert>
 
     <b-alert v-if="error" class="error" variant="danger" show>
-      {{ error }}
+      {{ error.name }} - {{ error.message }}
     </b-alert>
 
     <div v-if="userlist" class="content">
@@ -47,6 +47,7 @@ export default {
   created () {
     // fetch the data when the view is created and the data is
     // already being observed
+    this.displayBreadcrumbs();
     this.getUsers()
   },
   watch: {
@@ -54,23 +55,7 @@ export default {
     '$route': 'getUsers'
   },
   methods: {
-    async getUsers() {
-      this.error = this.userlist = null
-      this.loading = true
-
-      //see https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
-      //for more complete example with using headers for authorization
-      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/users';
-      const res = await fetch(url, {
-        headers: {
-          'Content-Type':'application/json'
-        }
-      });
-      const userlist = await res.json();
-
-      this.loading = false;
-      this.userlist = userlist;
-
+    displayBreadcrumbs() {
       //now set the vuex breadcrumbs state so breadcrumbs are updated
       this.$store.dispatch('replaceBreadcrumbs', [
         {
@@ -82,6 +67,32 @@ export default {
           active: true
         }
       ]);
+    },
+    async getUsers() {
+      this.error = this.userlist = null
+      this.loading = true
+      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/users';
+      try {
+        const response = await fetch(url, {
+          headers: {
+            'Content-Type':'application/json'
+          }
+        });
+        if (!response.ok) {
+          //we got response - but not one we like - like a 404 or something
+          throw new Error({
+            name: response.status, 
+            message: response.statusText
+          });
+        }
+        //good response, now lets try get the payload
+        const data = await response.json();
+        this.userlist = data;
+      } catch(error) {
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
     }
   }
 }

@@ -7,7 +7,7 @@
     </b-alert>
 
     <b-alert v-if="error" class="error" variant="danger" show>
-      {{ error }}
+      {{ error.name }} - {{ error.message }}
     </b-alert>
 
     <div v-if="user" class="content">
@@ -53,23 +53,7 @@ export default {
     '$route': 'getUser'
   },
   methods: {
-    async getUser() {
-      this.error = this.user = null
-      this.loading = true
-
-      //see https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
-      //for more complete example with using headers for authorization
-      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/user/' + this.userId;
-      const res = await fetch(url, {
-        headers: {
-          'Content-Type':'application/json'
-        }
-      });
-      const user = await res.json();
-
-      this.loading = false;
-      this.user = user;
-
+    displayBreadcrumbs(user) {
       //now set the vuex breadcrumbs state so breadcrumbs are updated
       this.$store.dispatch('replaceBreadcrumbs', [
         {
@@ -85,7 +69,34 @@ export default {
           active: true
         }
       ]);
+    },
+    async getUser() {
+      this.error = this.user = null
+      this.loading = true
 
+      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/user/' + this.userId;
+      try {
+        const response = await fetch(url, {
+          headers: {
+            'Content-Type':'application/json'
+          }
+        });
+        if (!response.ok) {
+          //we got response - but not one we like - like a 404 or something
+          throw new Error({
+            name: response.status, 
+            message: response.statusText
+          });
+        }
+        //good response, now lets try get the payload
+        const data = await response.json();
+        this.user = data;
+        this.displayBreadcrumbs(data);
+      } catch(error) {
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
     }
   }
 }

@@ -6,7 +6,7 @@
     </b-alert>
 
     <b-alert v-if="error" class="error" variant="danger" show>
-      {{ error }}
+      {{ error.name }} - {{ error.message }}
     </b-alert>
 
     <div v-if="student" class="content">
@@ -49,25 +49,9 @@ export default {
   watch: {
     // call again the method if the route changes
     '$route': 'getStudent'
-  },
+  }, 
   methods: {
-    async getStudent() {
-      this.error = this.student = null
-      this.loading = true
-
-      //see https://blog.bitsrc.io/requests-in-vuejs-fetch-api-and-axios-a-comparison-a0c13f241888
-      //for more complete example with using headers for authorization
-      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/student/' + this.studentId;
-      const res = await fetch(url, {
-        headers: {
-          'Content-Type':'application/json'
-        }
-      });
-      const student = await res.json();
-      
-      this.loading = false;
-      this.student = student;
-
+    displayBreadcrumbs(student) {
       //now set the vuex breadcrumbs state so breadcrumbs are updated
       this.$store.dispatch('replaceBreadcrumbs', [
         {
@@ -83,7 +67,34 @@ export default {
           active: true
         }
       ]);
+    },
+    async getStudent() {
+      this.error = this.student = null
+      this.loading = true
 
+      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/student/' + this.studentId;
+      try {
+        const response = await fetch(url, {
+          headers: {
+            'Content-Type':'application/json'
+          }
+        });
+        if (!response.ok) {
+          //we got response - but not one we like - like a 404 or something
+          throw new Error({
+            name: response.status, 
+            message: response.statusText
+          });
+        }
+        //good response, now lets try get the payload
+        const data = await response.json();
+        this.student = data;
+        this.displayBreadcrumbs(data);
+      } catch(error) {
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
     }
   }
 }
