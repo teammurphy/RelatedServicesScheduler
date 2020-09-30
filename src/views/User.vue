@@ -34,7 +34,6 @@ export default {
   components: {
     User_Caseload
   },
-
   data () {
     return {
       user: null,
