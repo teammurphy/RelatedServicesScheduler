@@ -71,7 +71,7 @@ export default {
     async getUsers() {
       this.error = this.userlist = null
       this.loading = true
-      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/users';
+      const url = process.env.VUE_APP_ROOT_API + '/users';
       try {
         const response = await fetch(url, {
           headers: {

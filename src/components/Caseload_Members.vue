@@ -52,7 +52,7 @@ export default {
       this.error = this.members = null
       this.loading = true
 
-      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/cases/byUserId/' + this.caseloadId;
+      const url = process.env.VUE_APP_ROOT_API + '/cases/byUserId/' + this.caseloadId;
       try {
         const response = await fetch(url, {
           headers: {

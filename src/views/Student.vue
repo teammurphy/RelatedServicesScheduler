@@ -72,7 +72,7 @@ export default {
       this.error = this.student = null
       this.loading = true
 
-      const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/student/' + this.studentId;
+      const url = process.env.VUE_APP_ROOT_API + '/student/' + this.studentId;
       try {
         const response = await fetch(url, {
           headers: {

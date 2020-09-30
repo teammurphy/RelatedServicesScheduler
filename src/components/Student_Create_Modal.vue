@@ -146,7 +146,7 @@ export default {
             this.loading = "Submitting new student";
             this.showModalOverlay = true;
 
-            const url = 'https://virtserver.swaggerhub.com/teammurphy/related-services/1.0.1/student';
+            const url = process.env.VUE_APP_ROOT_API + '/student';
             try {
                 const response = await fetch(url, {
                     method: 'POST',
