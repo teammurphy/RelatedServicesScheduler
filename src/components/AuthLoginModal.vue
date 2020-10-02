@@ -1,5 +1,5 @@
 <template>
-<div class="user_login_modal">
+<div class="auth-login-modal">
     
     <b-dropdown-item v-b-modal.user-login-modal>Sign In</b-dropdown-item>
 

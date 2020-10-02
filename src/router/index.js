@@ -8,8 +8,8 @@ import User from '../views/User.vue'
 import DemoFullCalendar from '../views/DemoFullCalendar.vue'
 import MandateScheduler from '../views/MandateScheduler.vue'
 import Dashboard from '../views/Dashboard.vue'
-import RegisterUser from '../views/RegisterUser.vue'
-import LoginUser from '../views/LoginUser.vue'
+import AuthRegister from '../views/AuthRegister.vue'
+import AuthLogin from '../views/AuthLogin.vue'
 import About from '../views/About.vue'
 
 Vue.use(VueRouter)
@@ -28,12 +28,12 @@ const routes = [{
   {
     path: '/register',
     name: 'register',
-    component: RegisterUser
+    component: AuthRegister
   },
   {
     path: '/login',
     name: 'login',
-    component: LoginUser
+    component: AuthLogin
   },
   {
     path: '/demofullcalendar',

@@ -46,9 +46,9 @@
               </template>
               <b-dropdown-item href="#">Profile</b-dropdown-item>
 
-              <User_Signup_Modal v-if="!getStoreLoggedIn" />
+              <AuthSignupModal v-if="!getStoreLoggedIn" />
 
-              <User_Login_Modal v-if="!getStoreLoggedIn" />
+              <AuthLoginModal v-if="!getStoreLoggedIn" />
 
               <router-link tag="b-dropdown-item" v-if="!getStoreLoggedIn" to="/login">Login</router-link>
               <router-link tag="b-dropdown-item" v-if="!getStoreLoggedIn" to="/register">Register</router-link>
@@ -64,8 +64,8 @@
 </template>
 
 <script>
-import User_Login_Modal from '@/components/User_Login_Modal.vue'
-import User_Signup_Modal from '@/components/User_Signup_Modal.vue'
+import AuthLoginModal from '@/components/AuthLoginModal.vue'
+import AuthSignupModal from '@/components/AuthSignupModal.vue'
 import { authComputed } from '../store/helpers.js'
 
 export default {
@@ -73,8 +73,8 @@ export default {
     ...authComputed
   },
   components: {
-    User_Login_Modal,
-    User_Signup_Modal,
+    AuthLoginModal,
+    AuthSignupModal,
   },
   methods: {
     logout() {

@@ -11,7 +11,7 @@
       information for providers, principals, supervisors, and others.
     </p>
 
-     <p v-if="!loggedIn">
+     <p v-if="!getStoreLoggedIn">
         To use this app you'll need to
         <router-link to="/login">
           Login

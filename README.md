@@ -30,6 +30,12 @@ caseloads and insure compliance.
 
 <!-- PROJECT SETUP -->
 ## Project setup
+
+Need a .env fiel for your environment (.env.local for local) containing the root of our api.  Ours is something like
+```
+VUE_APP_ROOT_API=https://bogus.com/services/api/
+```
+
 ```
 npm install
 ```
