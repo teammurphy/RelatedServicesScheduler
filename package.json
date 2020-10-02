@@ -14,6 +14,7 @@
     "@fullcalendar/rrule": "^5.3.1",
     "@fullcalendar/timegrid": "^5.3.1",
     "@fullcalendar/vue": "^5.3.1",
+    "axios": "^0.20.0",
     "bootstrap-vue": "^2.1.0",
     "core-js": "^3.6.5",
     "rrule": "^2.6.6",

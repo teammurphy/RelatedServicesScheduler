@@ -61,7 +61,7 @@ export default {
       this.error = this.caseload = null
       this.loading = true
 
-      const url = process.env.VUE_APP_ROOT_API + '/caseloads/byUserId/' + this.userId;
+      const url = process.env.VUE_APP_ROOT_API + 'caseloads/byUserId/' + this.userId;
       try {
         const response = await fetch(url, {
           headers: {

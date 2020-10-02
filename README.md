@@ -25,6 +25,8 @@ caseloads and insure compliance.
 * [BootstrapVue](https://bootstrap-vue.org/)
 * [SwaggerHub](https://swagger.io/tools/swaggerhub/) - api development and mocking
 * [Render] (https://render.com/) - hosting demo
+* [FastAPI] (https://fastapi.tiangolo.com/) - serving up our api
+* [PostgreSQL] (https://www.postgresql.org/) - holding our data
 
 <!-- PROJECT SETUP -->
 ## Project setup

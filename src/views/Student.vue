@@ -72,7 +72,7 @@ export default {
       this.error = this.student = null
       this.loading = true
 
-      const url = process.env.VUE_APP_ROOT_API + '/student/' + this.studentId;
+      const url = process.env.VUE_APP_ROOT_API + 'student/' + this.studentId;
       try {
         const response = await fetch(url, {
           headers: {

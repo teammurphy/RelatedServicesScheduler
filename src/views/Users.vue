@@ -71,7 +71,7 @@ export default {
     async getUsers() {
       this.error = this.userlist = null
       this.loading = true
-      const url = process.env.VUE_APP_ROOT_API + '/users';
+      const url = process.env.VUE_APP_ROOT_API + 'users';
       try {
         const response = await fetch(url, {
           headers: {

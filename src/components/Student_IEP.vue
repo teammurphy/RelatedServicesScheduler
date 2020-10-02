@@ -112,7 +112,7 @@ export default {
       this.error = this.iep = null
       this.loading = true
 
-      const url = process.env.VUE_APP_ROOT_API + '/ieps/byStudentId/' + this.studentId;
+      const url = process.env.VUE_APP_ROOT_API + 'ieps/byStudentId/' + this.studentId;
       try {
         const response = await fetch(url, {
           headers: {

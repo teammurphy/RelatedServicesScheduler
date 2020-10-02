@@ -73,7 +73,7 @@ export default {
       this.error = this.user = null
       this.loading = true
 
-      const url = process.env.VUE_APP_ROOT_API + '/user/' + this.userId;
+      const url = process.env.VUE_APP_ROOT_API + 'user/' + this.userId;
       try {
         const response = await fetch(url, {
           headers: {

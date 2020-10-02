@@ -4,7 +4,7 @@
   <p>
     A Vue.js app to manage related services scheduling.  Will be using fullcalendar
     for calendaring services.  Information comes from REST endpoints, currently
-    held in a flask/mysql application, but hopefully much will eventually come from DOE sources.
+    served from a fastapi server fronting a postgres server, but hopefully much will eventually come from DOE sources.
   </p>
 
   <h3>Installed CLI Plugins</h3>

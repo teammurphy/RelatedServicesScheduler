@@ -11,15 +11,7 @@
             before allow closing
     -->
 
-    <b-modal 
-        id="student-create-modal" 
-        ref="studentCreateModal"
-        title="Create Student"
-        header-bg-variant="primary"
-        @show="resetModal"
-        @hidden="resetModal"
-        @ok=handleOk
-    >
+    <b-modal id="student-create-modal" ref="studentCreateModal" title="Create Student" header-bg-variant="primary" @show="resetModal" @hidden="resetModal" @ok=handleOk>
 
         <b-alert v-if="loading" class="loading" show>
             <b-spinner label="Loading..." class="loading"></b-spinner>
@@ -146,7 +138,7 @@ export default {
             this.loading = "Submitting new student";
             this.showModalOverlay = true;
 
-            const url = process.env.VUE_APP_ROOT_API + '/student';
+            const url = process.env.VUE_APP_ROOT_API + 'student';
             try {
                 const response = await fetch(url, {
                     method: 'POST',

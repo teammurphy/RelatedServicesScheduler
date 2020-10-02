@@ -50,7 +50,7 @@ export default {
       this.error = this.mandates = null
       this.loading = true
 
-      const url = process.env.VUE_APP_ROOT_API + '/mandates/byIEPId/' + this.iepId;
+      const url = process.env.VUE_APP_ROOT_API + 'mandates/byIEPId/' + this.iepId;
       try {
         const response = await fetch(url, {
           headers: {

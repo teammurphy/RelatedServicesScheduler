@@ -7,6 +7,10 @@ import Users from '../views/Users.vue'
 import User from '../views/User.vue'
 import DemoFullCalendar from '../views/DemoFullCalendar.vue'
 import MandateScheduler from '../views/MandateScheduler.vue'
+import Dashboard from '../views/Dashboard.vue'
+import RegisterUser from '../views/RegisterUser.vue'
+import LoginUser from '../views/LoginUser.vue'
+import About from '../views/About.vue'
 
 Vue.use(VueRouter)
 
@@ -14,6 +18,22 @@ const routes = [{
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: Dashboard,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: RegisterUser
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginUser
   },
   {
     path: '/demofullcalendar',
@@ -51,7 +71,8 @@ const routes = [{
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import( /* webpackChunkName: "about" */ '../views/About.vue')
+    //component: () => import( /* webpackChunkName: "about" */ '../views/About.vue')
+    component: About
   }
 ]
 
@@ -59,6 +80,17 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  //why do we use user from local storage and not from vuex?
+  const loggedIn = localStorage.getItem('user')
+
+  if (to.matched.some(record => record.meta.requiresAuth) && !loggedIn) {    
+      next('/')
+  } else {
+    next()
+  }
 })
 
 export default router

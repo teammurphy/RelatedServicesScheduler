@@ -46,7 +46,7 @@ export default {
       this.error = this.goals = null
       this.loading = true
 
-      const url = process.env.VUE_APP_ROOT_API + '/goals/byIEPId/' + this.iepId;
+      const url = process.env.VUE_APP_ROOT_API + 'goals/byIEPId/' + this.iepId;
       try {
         const response = await fetch(url, {
           headers: {
