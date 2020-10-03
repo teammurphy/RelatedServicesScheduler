@@ -3,8 +3,8 @@
     <b-form @submit.prevent="login">
         <b-card header="Login" header-bg-variant="primary" header-text-variant="white" style="max-width: 20rem" class="mx-auto">
     
-            <b-form-group label="Email:">
-                <b-form-input v-model="email" name="email" ></b-form-input>
+            <b-form-group label="Username:">
+                <b-form-input v-model="username" name="username" ></b-form-input>
             </b-form-group>
 
             <b-form-group label="Password:">
@@ -28,7 +28,7 @@
     export default {
         data() {
             return{
-                email: '',
+                username: '',
                 password: '',
                 error: null
             }
@@ -43,7 +43,7 @@
         methods: {
             login() {
                 this.$store.dispatch('login', {
-                    username: this.email,
+                    username: this.username,
                     password: this.password
                 })
                 .then( () => {

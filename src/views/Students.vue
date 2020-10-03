@@ -2,14 +2,8 @@
   <b-container class="students">
     <h1>Students</h1>
 
-    <b-alert v-if="loading" class="loading" show>
-      <b-spinner label="Loading..." class="loading"></b-spinner>
-      Loading Student List ...
-    </b-alert>
-
-    <b-alert v-if="error" class="error" variant="danger" show>
-      {{ error.name }} - {{ error.message }}
-    </b-alert>
+    <BaseLoadingAlert v-bind:message="this.loadingMessage"/>
+    <BaseErrorAlert v-bind:error="this.error"/>
 
     <Student_Create_Modal/>
     <div v-if="studentlist" class="content">
@@ -29,14 +23,18 @@
 
 <script>
 import Student_Create_Modal from '@/components/Student_Create_Modal.vue'
+import BaseErrorAlert from '@/components/BaseErrorAlert.vue'
+import BaseLoadingAlert from '@/components/BaseLoadingAlert.vue'
 
 export default {
   components: {
-    Student_Create_Modal
+    Student_Create_Modal,
+    BaseErrorAlert,
+    BaseLoadingAlert
   },
   data () {
     return {
-      loading: false,
+      loadingMessage: '',
       studentlist: null,
       error: null
     }
@@ -67,7 +65,7 @@ export default {
     },
     async getStudents() {
       this.error = this.studentlist = null
-      this.loading = true
+      this.loadingMessage = 'Fetching Student List from Database'
 
       const url = process.env.VUE_APP_ROOT_API + 'students';
       try {
@@ -89,7 +87,7 @@ export default {
       } catch(error) {
         this.error = error;
       } finally {
-        this.loading = false;
+        this.loadingMessage = '';
       }
     }
   }

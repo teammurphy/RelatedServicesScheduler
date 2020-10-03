@@ -3,7 +3,7 @@
     
     <b-dropdown-item v-b-modal.user-login-modal>Sign In</b-dropdown-item>
 
-    <b-modal id="user-login-modal" ref="userLoginModal" title="Login" header-bg-variant="primary" @show="resetModal" @hidden="resetModal" @ok=handleOk>
+    <b-modal id="user-login-modal" ref="userLoginModal" title="Login" @show="resetModal" header-bg-variant="primary" header-text-variant="white" @hidden="resetModal" @ok=handleOk>
         
         <b-alert v-if="error" class="error" variant="danger" show>
             {{ error.name }} - {{ error.message }}
@@ -73,46 +73,19 @@ export default {
             }
             //need to build data object
             //we can set data = this.form, and then pass that to handle submit if we need to massage
-            this.handleSubmit();
+            this.login();
         },
-        async handleSubmit() {
-            //do a submit to the server
-            //show "submitting" alert
-            //wait for response, and 
-            //display results of successful submit in fading alert
-            this.error = this.user = null;
-
-            const url = process.env.VUE_APP_ROOT_API + 'user/login';
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    cache: 'no-cache',
-                    headers: {
-                        'Content-Type':'application/json'
-                    },
-                    body: JSON.stringify(this.form)
-                });
-                if (!response.ok) {
-                    //we got response - but not one we like - like a 404 or something
-                    throw new Error({
-                        name: response.status, 
-                        message: response.statusText
-                    });
-                }
-                //good response, now lets try get the payload which should represent the newly added student document
-                if (response.data.accessToken) {
-                    localStorage.setItem('user', JSON.stringify(response.data));
-                    //do we have to set the vuex stuff
-                    this.hideModal();
-                }
-                this.hideModal();
-                //const data = await response.json();
-                //now we have to set the vuex stuff and set nav icons properly
-                
-                //notify parent so the new entry can be added bakck to the database
-            } catch(error) {
-                this.error = error;
-            }
+        login() {
+            this.$store.dispatch('login', {
+                username: this.email,
+                password: this.password
+            })
+            .then( () => {
+                this.$router.push({ name: 'dashboard'})
+            })
+            .catch(err => {
+                this.error = err.message
+            })
         }
     }
 }
