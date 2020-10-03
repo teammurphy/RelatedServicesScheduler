@@ -1,14 +1,7 @@
 <template>
 <div class="user_caseload">
 
-  <b-alert v-if="loading" class="loading" show>
-    <b-spinner label="Loading..." class="loading"></b-spinner>
-    Loading Caseload ...
-  </b-alert>
-
-  <b-alert v-if="error" class="error" variant="danger" show>
-    {{ error.name }} - {{ error.message }}
-  </b-alert>
+  <BaseAlert v-bind:alert="this.alert"/>
 
   <div v-if="caseloads" class="content">
     <h3>Caseload</h3>
@@ -30,11 +23,13 @@
 
 <script>
 import Caseload_Members from '@/components/Caseload_Members.vue'
+import BaseAlert from '@/components/BaseAlert.vue'
 
 export default {
   name: 'User_Caseload',
   components: {
-    Caseload_Members
+    Caseload_Members,
+    BaseAlert
   },
   props: {
     userId: Number
@@ -44,8 +39,7 @@ export default {
       //caseloadId is the selected caseload
       caseloadId: null,
       caseloads: null,
-      loading: false,
-      error: null
+      alert: {}
     }
   },
   created() {
@@ -58,8 +52,14 @@ export default {
   },
   methods: {
     async getCaseload() {
-      this.error = this.caseload = null
-      this.loading = true
+      this.caseload = null
+      this.alert = {
+        show: true,
+        showSpinner: true,
+        variant: "info",
+        name: "Loading",
+        message: "Fetching Caseload from Database",
+      };
 
       const url = process.env.VUE_APP_ROOT_API + 'caseloads/byUserId/' + this.userId;
       try {
@@ -85,11 +85,15 @@ export default {
         this.caseloads = data;
         //set the first caseload in list as active
         this.caseloadId = data[0].id;
+        this.alert = {}
       } catch(error) {
-        this.error = error;
-      } finally {
-        this.loading = false;
-      }
+        this.alert = {
+          show: true,
+          variant: "danger",
+          name: error.name,
+          message: error.message,
+        }
+      } 
     }
   }
 }

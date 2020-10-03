@@ -1,14 +1,7 @@
 <template>
   <b-container class="user">
 
-    <b-alert v-if="loading" class="loading" show>
-      <b-spinner label="Loading..." class="loading"></b-spinner>
-      Loading User Info ...
-    </b-alert>
-
-    <b-alert v-if="error" class="error" variant="danger" show>
-      {{ error.name }} - {{ error.message }}
-    </b-alert>
+    <BaseAlert v-bind:alert="this.alert"/>
 
     <div v-if="user" class="content">
       <h2>{{ user.firstName }} {{ user.lastName }}</h2>
@@ -29,16 +22,17 @@
 <script>
 // @ is an alias to /src
 import User_Caseload from '@/components/User_Caseload.vue'
+import BaseAlert from '@/components/BaseAlert.vue'
 
 export default {
   components: {
-    User_Caseload
+    User_Caseload,
+    BaseAlert
   },
   data () {
     return {
       user: null,
-      error: null,
-      loading: false,
+      alert: {},
       userId: parseInt(this.$route.params.userId)
     }
   },
@@ -70,8 +64,14 @@ export default {
       ]);
     },
     async getUser() {
-      this.error = this.user = null
-      this.loading = true
+      this.user = null
+      this.alert = {
+        show: true,
+        showSpinner: true,
+        variant: "info",
+        name: "Loading",
+        message: "Fetching User from Database"
+      }
 
       const url = process.env.VUE_APP_ROOT_API + 'user/' + this.userId;
       try {
@@ -91,10 +91,14 @@ export default {
         const data = await response.json();
         this.user = data;
         this.displayBreadcrumbs(data);
+        this.alert = {}
       } catch(error) {
-        this.error = error;
-      } finally {
-        this.loading = false;
+        this.alert = {
+          show: true,
+          variant: "danger",
+          name: error.name,
+          message: error.message
+        }
       }
     }
   }

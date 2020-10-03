@@ -2,8 +2,7 @@
   <b-container class="students">
     <h1>Students</h1>
 
-    <BaseLoadingAlert v-bind:message="this.loadingMessage"/>
-    <BaseErrorAlert v-bind:error="this.error"/>
+    <BaseAlert v-bind:alert="this.alert"/>
 
     <Student_Create_Modal/>
     <div v-if="studentlist" class="content">
@@ -17,26 +16,22 @@
       </b-table>
 
     </div>
-
   </b-container>
 </template>
 
 <script>
 import Student_Create_Modal from '@/components/Student_Create_Modal.vue'
-import BaseErrorAlert from '@/components/BaseErrorAlert.vue'
-import BaseLoadingAlert from '@/components/BaseLoadingAlert.vue'
+import BaseAlert from '@/components/BaseAlert.vue'
 
 export default {
   components: {
     Student_Create_Modal,
-    BaseErrorAlert,
-    BaseLoadingAlert
+    BaseAlert
   },
   data () {
     return {
-      loadingMessage: '',
+      alert: {},
       studentlist: null,
-      error: null
     }
   },
   created () {
@@ -64,8 +59,14 @@ export default {
       ]);
     },
     async getStudents() {
-      this.error = this.studentlist = null
-      this.loadingMessage = 'Fetching Student List from Database'
+      this.studentlist = null
+      this.alert = {
+        show: true,
+        showSpinner: true,
+        variant: "info",
+        name: "Loading",
+        message: "Fetching Student List from Database"
+      }
 
       const url = process.env.VUE_APP_ROOT_API + 'students';
       try {
@@ -84,11 +85,15 @@ export default {
         //good response, now lets try get the payload
         const data = await response.json();
         this.studentlist = data;
+        this.alert = {}
       } catch(error) {
-        this.error = error;
-      } finally {
-        this.loadingMessage = '';
-      }
+        this.alert = {
+          show: true,
+          variant: "danger",
+          name: error.name,
+          message: error.message
+        }
+      } 
     }
   }
 }

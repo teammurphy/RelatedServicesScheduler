@@ -1,13 +1,6 @@
 <template>
 <b-container class="student">
-    <b-alert v-if="loading" class="loading" show>
-      <b-spinner label="Loading..." class="loading"></b-spinner>
-      Loading Student Info ...
-    </b-alert>
-
-    <b-alert v-if="error" class="error" variant="danger" show>
-      {{ error.name }} - {{ error.message }}
-    </b-alert>
+    <BaseAlert v-bind:alert="this.alert"/>
 
     <div v-if="student" class="content">
       <h2>Student: {{ student.firstName }} {{ student.lastName }}</h2>
@@ -26,18 +19,18 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import Student_IEP from '@/components/Student_IEP.vue'
+import BaseAlert from '@/components/BaseAlert.vue'
 
 export default {
   components: {
-    Student_IEP
+    Student_IEP,
+    BaseAlert
   },
   data () {
     return {
       student: null,
-      error: null,
-      loading: false,
+      alert: {},
       studentId: parseInt(this.$route.params.studentId)
     }
   },
@@ -69,8 +62,14 @@ export default {
       ]);
     },
     async getStudent() {
-      this.error = this.student = null
-      this.loading = true
+      this.student = null
+      this.alert = {
+        show: true,
+        showSpinner: true,
+        variant: "info",
+        name: "Loading",
+        message: "Fetching Student from Database"
+      }
 
       const url = process.env.VUE_APP_ROOT_API + 'student/' + this.studentId;
       try {
@@ -90,11 +89,15 @@ export default {
         const data = await response.json();
         this.student = data;
         this.displayBreadcrumbs(data);
+        this.alert = {}
       } catch(error) {
-        this.error = error;
-      } finally {
-        this.loading = false;
-      }
+        this.alert = {
+          show: true,
+          variant: "danger",
+          name: error.name,
+          message: error.message
+        }
+      } 
     }
   }
 }

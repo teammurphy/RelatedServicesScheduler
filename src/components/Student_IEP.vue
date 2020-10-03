@@ -1,14 +1,7 @@
 <template>
 <div class="student_iep">
 
-  <b-alert show v-if="loading" class="loading">
-    <b-spinner label="Loading..." class="loading"></b-spinner>
-    Loading IEP ...
-  </b-alert>
-
-  <b-alert v-if="error" class="error" variant="danger" show>
-    {{ error.name }} - {{ error.message }}
-  </b-alert>
+  <BaseAlert v-bind:alert="this.alert"/>
 
   <div v-if="ieps" class="content">
     <h2>IEP</h2>
@@ -76,13 +69,15 @@
 <script>
 import IEP_Mandates from '@/components/IEP_Mandates.vue'
 import IEP_Goals from '@/components/IEP_Goals.vue'
+import BaseAlert from '@/components/BaseAlert.vue'
 //import Calendar_Generic from '@/components/Calendar_Generic.vue'
 
 export default {
   name: 'Student_IEP',
   components: {
     IEP_Mandates,
-    IEP_Goals
+    IEP_Goals,
+    BaseAlert
     //,
     //Calendar_Generic
   },
@@ -95,8 +90,7 @@ export default {
     return {
       ieps: null,
       iepId: null,
-      loading: false,
-      error: null
+      alert: {}
     }
   },
   created() {
@@ -109,8 +103,14 @@ export default {
   },
   methods: {
     async getIEP() {
-      this.error = this.iep = null
-      this.loading = true
+      this.iep = null
+      this.alert = {
+        show: true,
+        showSpinner: true,
+        variant: "info",
+        name: "Loading",
+        message: "Fetching IEP Mandate from Database",
+      };
 
       const url = process.env.VUE_APP_ROOT_API + 'ieps/byStudentId/' + this.studentId;
       try {
@@ -136,11 +136,15 @@ export default {
         this.ieps = ieps;
         //set the first iep in list as active
         this.iepId = ieps[0].id;
+        this.alert = {}
       } catch(error) {
-        this.error = error;
-      } finally {
-        this.loading = false;
-      }
+        this.alert = {
+          show: true,
+          variant: "danger",
+          name: error.name,
+          message: error.message,
+        }
+      } 
     }
   }
 }

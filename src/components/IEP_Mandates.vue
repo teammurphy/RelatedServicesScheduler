@@ -1,14 +1,7 @@
 <template>
 <div class="iep_mandates">
 
-  <b-alert show v-if="loading" class="loading">
-    <b-spinner label="Loading..." class="loading"></b-spinner>
-    Loading Mandates ...
-  </b-alert>
-
-  <b-alert v-if="error" class="error" variant="danger" show>
-    {{ error.name }} - {{ error.message }}
-  </b-alert>
+  <BaseAlert v-bind:alert="this.alert"/>
 
   <div v-if="mandates" class="content">
     <b-table striped hover :items="mandates"></b-table>
@@ -25,16 +18,20 @@
 </template>
 
 <script>
+import BaseAlert from '@/components/BaseAlert.vue'
+
 export default {
   name: 'IEP_Mandates',
+  components: {
+    BaseAlert,
+  },
   props: {
     iepId: Number
   },
   data () {
     return {
       mandates: null,
-      loading: false,
-      error: null
+      alert: {}
     }
   },
   created() {
@@ -47,8 +44,14 @@ export default {
   },
   methods: {
     async getMandates() {
-      this.error = this.mandates = null
-      this.loading = true
+      this.mandates = null
+      this.alert = {
+        show: true,
+        showSpinner: true,
+        variant: "info",
+        name: "Loading",
+        message: "Fetching IEP Mandates from Database",
+      };
 
       const url = process.env.VUE_APP_ROOT_API + 'mandates/byIEPId/' + this.iepId;
       try {
@@ -67,11 +70,15 @@ export default {
         //good response, now lets try get the payload
         const data = await response.json();
         this.mandates = data;
+        this.alert = {}
       } catch(error) {
-        this.error = error;
-      } finally {
-        this.loading = false;
-      }
+        this.alert = {
+          show: true,
+          variant: "danger",
+          name: error.name,
+          message: error.message,
+        }
+      } 
     }
   }
 }

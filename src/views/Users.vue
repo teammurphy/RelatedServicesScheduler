@@ -1,14 +1,7 @@
 <template>
   <b-container class="users">
 
-    <b-alert show v-if="loading" class="loading">
-      <b-spinner label="Loading..." class="loading"></b-spinner>
-      Loading User List ...
-    </b-alert>
-
-    <b-alert v-if="error" class="error" variant="danger" show>
-      {{ error.name }} - {{ error.message }}
-    </b-alert>
+    <BaseAlert v-bind:alert="this.alert"/>
 
     <div v-if="userlist" class="content">
 
@@ -36,12 +29,16 @@
 </template>
 
 <script>
+import BaseAlert from '@/components/BaseAlert.vue'
+
 export default {
+  components: {
+    BaseAlert
+  },
   data () {
     return {
-      loading: false,
       userlist: null,
-      error: null
+      alert: {}
     }
   },
   created () {
@@ -69,8 +66,14 @@ export default {
       ]);
     },
     async getUsers() {
-      this.error = this.userlist = null
-      this.loading = true
+      this.userlist = null
+      this.alert = {
+        show: true,
+        showSpinner: true,
+        variant: "info",
+        name: "Loading",
+        message: "Fetching User List from Database"
+      }
       const url = process.env.VUE_APP_ROOT_API + 'users';
       try {
         const response = await fetch(url, {
@@ -88,10 +91,14 @@ export default {
         //good response, now lets try get the payload
         const data = await response.json();
         this.userlist = data;
+        this.alert = {}
       } catch(error) {
-        this.error = error;
-      } finally {
-        this.loading = false;
+        this.alert = {
+          show: true,
+          variant: "danger",
+          name: error.name,
+          message: error.message
+        }
       }
     }
   }

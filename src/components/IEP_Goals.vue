@@ -1,14 +1,7 @@
 <template>
 <div class="iep_goals">
 
-  <b-alert v-if="loading" class="loading" show>
-    <b-spinner label="Loading..." class="loading"></b-spinner>
-    Loading Goals ...
-  </b-alert>
-
-  <b-alert v-if="error" class="error" variant="danger" show>
-    {{ error.name }} - {{ error.message }}
-  </b-alert>
+  <BaseAlert v-bind:alert="this.alert"/>
 
   <div v-if="goals" class="content">
     <b-table striped hover :items="goals"></b-table>
@@ -21,16 +14,20 @@
 </template>
 
 <script>
+import BaseAlert from '@/components/BaseAlert.vue'
+
 export default {
   name: 'IEP_Goals',
+  components: {
+    BaseAlert,
+  },
   props: {
     iepId: Number
   },
   data () {
     return {
       goals: null,
-      loading: false,
-      error: null
+      alert: {}
     }
   },
   created() {
@@ -43,8 +40,14 @@ export default {
   },
   methods: {
     async getGoals() {
-      this.error = this.goals = null
-      this.loading = true
+      this.goals = null
+      this.alert = {
+        show: true,
+        showSpinner: true,
+        variant: "info",
+        name: "Loading",
+        message: "Fetching IEP Goals from Database",
+      };
 
       const url = process.env.VUE_APP_ROOT_API + 'goals/byIEPId/' + this.iepId;
       try {
@@ -63,11 +66,15 @@ export default {
         //good response, now lets try get the payload
         const data = await response.json();
         this.goals = data;
+        this.alert = {}
       } catch(error) {
-        this.error = error;
-      } finally {
-        this.loading = false;
-      }
+        this.alert = {
+          show: true,
+          variant: "danger",
+          name: error.name,
+          message: error.message,
+        }
+      } 
     }
   }
 }

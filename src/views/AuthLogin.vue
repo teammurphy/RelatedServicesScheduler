@@ -14,7 +14,7 @@
     
             <b-button type="submit" name="button" variant="primary">Login</b-button>
 
-            <b-alert show variant="danger" v-if="error" class="error">{{ error }}</b-alert>
+            <BaseAlert v-bind:alert="this.alert"/>
 
             <b-card-footer>
                 <router-link to="/register">Don't have an account? Register</router-link>
@@ -25,37 +25,44 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            return{
-                username: '',
-                password: '',
-                error: null
-            }
-        },
-        created() {
-            //now set the vuex breadcrumbs state so breadcrumbs are updated
-            this.$store.dispatch('replaceBreadcrumbs', [
-                {text: 'Home',to: {name: 'Home'}},
-                {text: 'Login',active: true}
-            ]);
-        },
-        methods: {
-            login() {
-                this.$store.dispatch('login', {
-                    username: this.username,
-                    password: this.password
-                })
-                .then( () => {
-                  this.$router.push({ name: 'dashboard'})
-                })
-                .catch(err => {
-                    this.error = err.message
-                })
-            }
+import BaseAlert from '@/components/BaseAlert.vue'
+
+export default {
+    components: {
+        BaseAlert
+    },
+    data() {
+        return{
+            username: '',
+            password: '',
+            alert: {}
+        }
+    },
+    created() {
+        //now set the vuex breadcrumbs state so breadcrumbs are updated
+        this.$store.dispatch('replaceBreadcrumbs', [
+            {text: 'Home',to: {name: 'Home'}},
+            {text: 'Login',active: true}
+        ]);
+    },
+    methods: {
+        login() {
+            this.$store.dispatch('login', {
+                username: this.username,
+                password: this.password
+            })
+            .then( () => {
+                this.$router.push({ name: 'dashboard'})
+            })
+            .catch(err => {
+                this.alert = {
+                    show: true,
+                    variant: "danger",
+                    name: err.name,
+                    message: err.message
+                }
+            })
         }
     }
+}
 </script>
-
-<style scoped>
-</style>

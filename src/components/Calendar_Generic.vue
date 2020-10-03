@@ -1,14 +1,7 @@
 <template>
 <div class="generic_calendar">
 
-  <b-alert v-if="loading" class="loading" show>
-    <b-spinner label="Loading..." class="loading"></b-spinner>
-    Loading Calendar ...
-  </b-alert>
-
-  <b-alert v-if="error" class="error" variant="danger" show>
-    {{ error.name }} - {{ error.message }}
-  </b-alert>
+  <BaseAlert v-bind:alert="this.alert"/>
 
   <div v-if="events" class="content">
     <FullCalendar class='app-calendar' :options='calendarOptions'>
@@ -28,6 +21,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import rrulePlugin from '@fullcalendar/rrule'
+import BaseAlert from '@/components/BaseAlert.vue'
 
 import {
   INITIAL_EVENTS,
@@ -36,13 +30,15 @@ import {
 
 export default {
   components: {
-    FullCalendar
+    FullCalendar,
+    BaseAlert
   },
   props: {
     eventSources: [String]
   },
   data: function() {
     return {
+      alert: {},
       calendarOptions: {
         plugins: [
           dayGridPlugin,

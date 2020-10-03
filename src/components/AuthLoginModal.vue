@@ -5,9 +5,7 @@
 
     <b-modal id="user-login-modal" ref="userLoginModal" title="Login" @show="resetModal" header-bg-variant="primary" header-text-variant="white" @hidden="resetModal" @ok=handleOk>
         
-        <b-alert v-if="error" class="error" variant="danger" show>
-            {{ error.name }} - {{ error.message }}
-        </b-alert>
+        <BaseAlert v-bind:alert="this.alert"/>
         
         <b-form ref="form" @submit.stop.prevent="handleSubmit">
             <b-form-group label="Username" label-for="username-input" invalid-feedback="Username is required">
@@ -26,7 +24,12 @@
 </template>
 
 <script>
+import BaseAlert from '@/components/BaseAlert.vue'
+
 export default {
+    components: {
+        BaseAlert
+    },
     data() {
         return {
             form: {
@@ -35,7 +38,7 @@ export default {
             },
             usernameState: null,
             passwordState: null,
-            error: null
+            alert: {}
         }
     },
     methods: {
@@ -43,12 +46,17 @@ export default {
             //some checks before we actually submit name message
             const isValid = this.$refs.form.checkValidity();
             if (!isValid) {
-                this.error = {name: "Validation Error", message: 'error validating fields'};
+                this.alert = {
+                    show: true,
+                    variant: "danger",
+                    name: "Validation Error",
+                    message: "Error validating fields"
+                }
                 //we need to look at each field in turn to know which were the problems
                 this.usernameState = ((this.form.username.trim().length >0) ? true : false);
                 this.passwordState = ((this.form.password.trim().length >0) ? true : false);
             } else {
-                this.error = null;
+                this.alert = {}
                 this.usernameState = true;
                 this.passwordState = true;
             }
@@ -84,7 +92,12 @@ export default {
                 this.$router.push({ name: 'dashboard'})
             })
             .catch(err => {
-                this.error = err.message
+                this.alert = {
+                    show: true,
+                    variant: "danger",
+                    name: err.name,
+                    message: err.message
+                }
             })
         }
     }
