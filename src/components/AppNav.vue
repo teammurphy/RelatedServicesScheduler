@@ -46,9 +46,9 @@
               </template>
               <b-dropdown-item href="#">Profile</b-dropdown-item>
 
-              <AuthSignupModal v-if="!getStoreLoggedIn" />
+              <auth-signup-modal v-if="!getStoreLoggedIn" />
 
-              <AuthLoginModal v-if="!getStoreLoggedIn" />
+              <auth-login-modal v-if="!getStoreLoggedIn" />
 
               <router-link tag="b-dropdown-item" v-if="!getStoreLoggedIn" to="/login">Login</router-link>
               <router-link tag="b-dropdown-item" v-if="!getStoreLoggedIn" to="/register">Register</router-link>
