@@ -1,6 +1,6 @@
 <template>
 <b-container class="student">
-    <BaseAlert v-bind:alert="this.alert"/>
+    <base-alert v-bind="alert" />
 
     <div v-if="student" class="content">
       <h2>Student: {{ student.firstName }} {{ student.lastName }}</h2>

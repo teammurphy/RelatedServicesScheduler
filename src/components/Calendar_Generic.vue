@@ -1,7 +1,7 @@
 <template>
 <div class="generic_calendar">
 
-  <BaseAlert v-bind:alert="this.alert"/>
+  <base-alert v-bind="alert" />
 
   <div v-if="events" class="content">
     <FullCalendar class='app-calendar' :options='calendarOptions'>

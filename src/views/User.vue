@@ -1,7 +1,7 @@
 <template>
   <b-container class="user">
 
-    <BaseAlert v-bind:alert="this.alert"/>
+    <base-alert v-bind="alert" />
 
     <div v-if="user" class="content">
       <h2>{{ user.firstName }} {{ user.lastName }}</h2>

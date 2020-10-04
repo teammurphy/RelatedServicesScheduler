@@ -32,7 +32,7 @@
           ></b-form-input>
         </b-form-group>
 
-        <BaseAlert v-bind:alert="this.alert"/>
+        <base-alert v-bind="alert" />
 
         <router-link to="/login">Already have an account? Login</router-link>
 

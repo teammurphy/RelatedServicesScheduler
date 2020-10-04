@@ -5,7 +5,7 @@
 
     <b-modal id="user-login-modal" ref="userLoginModal" title="Login" @show="resetModal" header-bg-variant="primary" header-text-variant="white" @hidden="resetModal" @ok=handleOk>
         
-        <BaseAlert v-bind:alert="this.alert"/>
+        <base-alert v-bind="alert" />
         
         <b-form ref="form" @submit.stop.prevent="handleSubmit">
             <b-form-group label="Username" label-for="username-input" invalid-feedback="Username is required">

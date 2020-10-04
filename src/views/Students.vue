@@ -2,7 +2,7 @@
   <b-container class="students">
     <h1>Students</h1>
 
-    <BaseAlert v-bind:alert="this.alert"/>
+    <base-alert v-bind="alert" />
 
     <Student_Create_Modal/>
     <div v-if="studentlist" class="content">

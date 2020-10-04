@@ -1,7 +1,7 @@
 <template>
 <div class="user_caseload">
 
-  <BaseAlert v-bind:alert="this.alert"/>
+  <base-alert v-bind="alert" />
 
   <div v-if="caseloads" class="content">
     <h3>Caseload</h3>

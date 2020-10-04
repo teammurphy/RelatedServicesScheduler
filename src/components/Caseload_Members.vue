@@ -1,6 +1,6 @@
 <template>
   <div class="caseload_members">
-    <BaseAlert v-bind:alert="this.alert" />
+    <base-alert v-bind="alert" />
 
     <div v-if="members" class="content">
       <h3>Caselist</h3>

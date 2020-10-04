@@ -12,7 +12,7 @@
       @hidden="resetModal"
       @ok="handleOk"
     >
-      <BaseAlert v-bind:alert="this.alert" />
+      <base-alert v-bind="alert" />
 
       <b-form ref="form" @submit.stop.prevent="handleSubmit">
         <b-form-group

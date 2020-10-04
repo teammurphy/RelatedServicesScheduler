@@ -14,7 +14,7 @@
     
             <b-button type="submit" name="button" variant="primary">Login</b-button>
 
-            <BaseAlert v-bind:alert="this.alert"/>
+            <base-alert v-bind="alert" />
 
             <b-card-footer>
                 <router-link to="/register">Don't have an account? Register</router-link>

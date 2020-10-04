@@ -1,7 +1,7 @@
 <template>
-    <b-alert :class="alert.error" :variant="alert.variant" :show="alert.show" :dismissible="alert.dismissible" fade>
-        <b-spinner v-if="alert.showSpinner" label="Loading..." class="loading"></b-spinner>
-        <strong>{{ alert.name }}</strong> {{ alert.message }}
+    <b-alert :variant="variant" :show="show" :dismissible="dismissible" fade>
+        <b-spinner v-if="showSpinner" label="Loading..." class="loading"></b-spinner>
+        <strong>{{ name }}</strong> {{ message }}
     </b-alert>
 </template>
 
@@ -17,9 +17,14 @@ alert: {show: true,
         message: "Fetching Student List from Database"
 */
 export default {
-    name: 'BaseAlert',
+    //name: 'BaseAlert',
     props: {
-        alert: Object
+        show: {type: Boolean, default: false},
+        showSpinner: {type: Boolean, default: false},
+        dismissible: {type: Boolean, default: false},
+        variant: {type: String, default: "info"},
+        name: {type: String, required: false},
+        message: {type: String, required: true}
     }
 }
 </script>

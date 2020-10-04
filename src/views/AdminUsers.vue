@@ -3,7 +3,7 @@
         <h1>Admin Vue</h1>
         <h2>Users</h2>
 
-        <BaseAlert v-bind:alert="this.alert"/>
+        <base-alert v-bind="alert" />
     </b-container>
 </template>
 

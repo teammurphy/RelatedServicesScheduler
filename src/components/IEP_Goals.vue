@@ -1,7 +1,7 @@
 <template>
 <div class="iep_goals">
 
-  <BaseAlert v-bind:alert="this.alert"/>
+  <base-alert v-bind="alert" />
 
   <div v-if="goals" class="content">
     <b-table striped hover :items="goals"></b-table>

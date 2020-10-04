@@ -22,7 +22,7 @@
       @hidden="resetModal"
       @ok="handleOk"
     >
-      <BaseAlert v-bind:alert="this.alert" />
+      <base-alert v-bind="alert" />
 
       <b-overlay :show="showModalOverlay" rounded="sm">
         <b-form ref="form" @submit.stop.prevent="handleSubmit">

@@ -1,7 +1,7 @@
 <template>
 <div class="student_iep">
 
-  <BaseAlert v-bind:alert="this.alert"/>
+  <base-alert v-bind="alert" />
 
   <div v-if="ieps" class="content">
     <h2>IEP</h2>

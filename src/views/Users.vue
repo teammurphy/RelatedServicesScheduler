@@ -1,7 +1,7 @@
 <template>
   <b-container class="users">
 
-    <BaseAlert v-bind:alert="this.alert"/>
+    <base-alert v-bind="alert" />
 
     <div v-if="userlist" class="content">
 
