@@ -23,15 +23,15 @@ caseloads and insure compliance.
 * [Vue.js](https://vuejs.org)
 * [FullCalendar](https://fullcalendar.io)
 * [BootstrapVue](https://bootstrap-vue.org/)
-* [SwaggerHub](https://swagger.io/tools/swaggerhub/) - api development and mocking
-* [Render] (https://render.com/) - hosting demo
-* [FastAPI] (https://fastapi.tiangolo.com/) - serving up our api
-* [PostgreSQL] (https://www.postgresql.org/) - holding our data
+* [SwaggerHub](https://swagger.io/tools/swaggerhub/)
+* [Render] (https://render.com/)
+* [FastAPI] (https://fastapi.tiangolo.com/) 
+* [PostgreSQL] (https://www.postgresql.org/) 
 
 <!-- PROJECT SETUP -->
 ## Project setup
 
-Need a .env fiel for your environment (.env.local for local) containing the root of our api.  Ours is something like
+Need a .env file for your environment (.env.local for local) containing the root of our api.  Ours is something like
 ```
 VUE_APP_ROOT_API=https://bogus.com/services/api/
 ```
@@ -60,7 +60,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 <!-- DEMO -->
 ## Demo
-This application is being hosted on Render to allow testing and general messing about - [Demo](https://relatedservice.onrender.com/)
+This application is being hosted on Render to allow testing and general messing about - [Demo](https://relatedservice.onrender.com/) - not at all a current version - soon
 
 <!-- LICENSE -->
 ## License
@@ -72,6 +72,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Thomas Murphy - [@codegaucho](https://twitter.com/codegaucho) - tom@codegaucho.com
 
-Project Link: [https://github.com/codegaucho/RelatedServicesScheduler](https://github.com/codegaucho/RelatedServicesScheduler)
+Project Link: [https://github.com/teammurphy/RelatedServicesScheduler](https://github.com/teammurphy/RelatedServicesScheduler)
 
 [product-screenshot]: images/screenshot.png
