@@ -62,10 +62,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ## Demo
 This application is being hosted on Render to allow testing and general messing about - [Demo](https://relatedservice.onrender.com/) - not at all a current version - soon
 
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
 
 <!-- CONTACT -->
 ## Contact
