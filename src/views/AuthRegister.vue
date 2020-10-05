@@ -64,12 +64,19 @@ export default {
   created() {
     //now set the vuex breadcrumbs state so breadcrumbs are updated
     this.$store.dispatch("replaceBreadcrumbs", [
-      { text: "Home", to: { name: "Home" } },
+      { text: "Home", to: { name: "home" } },
       { text: "Register", active: true },
     ]);
   },
   methods: {
     register() {
+      this.alert = {
+        show: true,
+        showSpinner: true,
+        variant: "info",
+        name: "Registering",
+        message: "Registering you as a new user"
+      }
       this.$store
         .dispatch("register", {
           username: this.username,
@@ -79,7 +86,9 @@ export default {
           password: this.password,
         })
         .then(() => {
-          this.$router.push({ name: "dashboard" });
+          this.alert = {}
+          //this.$router.push({ name: "dashboard" });
+          this.$router.push({ name: "home" });
         })
         .catch((err) => {
           this.alert = {

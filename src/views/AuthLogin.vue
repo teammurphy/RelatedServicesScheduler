@@ -41,18 +41,27 @@ export default {
     created() {
         //now set the vuex breadcrumbs state so breadcrumbs are updated
         this.$store.dispatch('replaceBreadcrumbs', [
-            {text: 'Home',to: {name: 'Home'}},
+            {text: 'Home',to: {name: 'home'}},
             {text: 'Login',active: true}
         ]);
     },
     methods: {
         login() {
+            this.alert = {
+                show: true,
+                showSpinner: true,
+                variant: "info",
+                name: "Authenticating",
+                message: "Requesting Credentials"
+            }
             this.$store.dispatch('login', {
                 username: this.username,
                 password: this.password
             })
             .then( () => {
-                this.$router.push({ name: 'dashboard'})
+                this.alert = {}
+                //this.$router.push({ name: 'dashboard'})
+                this.$router.push({ name: 'home'})
             })
             .catch(err => {
                 this.alert = {

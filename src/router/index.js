@@ -8,6 +8,7 @@ import User from '../views/User.vue'
 import DemoFullCalendar from '../views/DemoFullCalendar.vue'
 import MandateScheduler from '../views/MandateScheduler.vue'
 import Dashboard from '../views/Dashboard.vue'
+import AdminUsers from '../views/AdminUsers.vue'
 import AuthRegister from '../views/AuthRegister.vue'
 import AuthLogin from '../views/AuthLogin.vue'
 import About from '../views/About.vue'
@@ -16,7 +17,7 @@ Vue.use(VueRouter)
 
 const routes = [{
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: Home
   },
   {
@@ -24,6 +25,11 @@ const routes = [{
     name: 'dashboard',
     component: Dashboard,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/adminusers',
+    name: 'adminusers',
+    component: AdminUsers
   },
   {
     path: '/register',

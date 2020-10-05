@@ -9,7 +9,7 @@
         
         <b-form ref="form" @submit.stop.prevent="handleSubmit">
             <b-form-group label="Username" label-for="username-input" invalid-feedback="Username is required">
-                <b-form-input type="email" id="username-input" v-model="form.username" :state="usernameState" required></b-form-input>
+                <b-form-input type="text" id="username-input" v-model="form.username" :state="usernameState" required></b-form-input>
             </b-form-group>
 
             <b-form-group label="Password" label-for="password-input" invalid-feedback="Password is required">
@@ -84,12 +84,21 @@ export default {
             this.login();
         },
         login() {
+            this.alert = {
+                show: true,
+                showSpinner: true,
+                variant: "info",
+                name: "Authenticating",
+                message: "Requesting Credentials"
+            }
             this.$store.dispatch('login', {
                 username: this.email,
                 password: this.password
             })
             .then( () => {
-                this.$router.push({ name: 'dashboard'})
+                this.alert = {}
+                //this.$router.push({ name: 'dashboard'})
+                this.$router.push({ name: 'home'})
             })
             .catch(err => {
                 this.alert = {

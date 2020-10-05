@@ -132,6 +132,13 @@ export default {
       this.register();
     },
     register() {
+      this.alert = {
+        show: true,
+        showSpinner: true,
+        variant: "info",
+        name: "Registering",
+        message: "Registering you as a new user"
+      }
       this.$store
         .dispatch("register", {
           username: this.username,
@@ -141,7 +148,9 @@ export default {
           password: this.password,
         })
         .then(() => {
-          this.$router.push({ name: "dashboard" });
+          this.alert = {}
+          //this.$router.push({ name: "dashboard" });
+          this.$router.push({ name: "home" });
         })
         .catch((err) => {
           this.alert = {

@@ -10,7 +10,8 @@ axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 export default new Vuex.Store({
   state: {
     breadcrumbs: [],
-    user: null
+    user: null,
+    token: null
   },
   mutations: {
     SET_BREADCRUMBS(state, breadcrumbs) {
@@ -19,6 +20,7 @@ export default new Vuex.Store({
     SET_USER_DATA(state, userData) {
       //should this be userData or userData.user
       state.user = userData.user
+      state.token = userData.access_token
       localStorage.setItem('user', JSON.stringify(userData))
       //should it be token or access_token
       axios.defaults.headers.common['Authorization'] = `Bearer ${
@@ -46,7 +48,7 @@ export default new Vuex.Store({
           commit('SET_USER_DATA', data)
         }
       )
-    },
+    }, 
     login({ commit }, credentials) { 
       const url = process.env.VUE_APP_ROOT_API + 'token';
       const payload = `grant_type=password&username=${credentials.username}&password=${credentials.password}`
@@ -70,6 +72,9 @@ export default new Vuex.Store({
     },
     getStoreUser (state) { 
       return state.user
+    },
+    getStoreToken(state) {
+      return state.token
     },
     getStoreRoleNames(state) {
       //roles are objects, but for simple navigation we often need to know

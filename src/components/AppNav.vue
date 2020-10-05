@@ -14,14 +14,12 @@
 
             <router-link tag="b-nav-item" to="/dashboard">Dashboard</router-link>
 
-            <b-nav-item-dropdown text="Admin Stuff" v-if="getStoreRoleNames.includes('admin')">
+            <b-nav-item-dropdown text="Garbage" v-if="getStoreRoleNames.includes('admin')">
               <b-dropdown-item href="#">EN</b-dropdown-item>
               <b-dropdown-item href="#">ES</b-dropdown-item>
               <b-dropdown-item href="#">RU</b-dropdown-item>
               <b-dropdown-item href="#">FA</b-dropdown-item>
             </b-nav-item-dropdown>
-
-            <b-nav-item>roles={{JSON.stringify(getStoreUser)}}</b-nav-item>
 
             <b-nav-item v-if="getStoreRoleNames.includes('provider')">Provider Stuff</b-nav-item>
             <b-nav-item v-if="getStoreRoleNames.includes('supervisor')">Supervisor Stuff</b-nav-item>
@@ -31,8 +29,9 @@
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
 
-            <b-nav-item-dropdown text="Various Odds and ends" right>
+            <b-nav-item-dropdown text="Admin" right>
               <router-link tag="b-dropdown-item" to="/demofullcalendar">FullCalendar</router-link>
+              <router-link tag="b-dropdown-item" to="/adminusers">Users</router-link>
               <b-dropdown-item href="#">EN</b-dropdown-item>
               <b-dropdown-item href="#">ES</b-dropdown-item>
               <b-dropdown-item href="#">RU</b-dropdown-item>
@@ -83,6 +82,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

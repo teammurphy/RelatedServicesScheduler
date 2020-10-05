@@ -1,30 +1,28 @@
 <template>
     <b-alert :variant="variant" :show="show" :dismissible="dismissible" fade>
         <b-spinner v-if="showSpinner" label="Loading..." class="loading"></b-spinner>
+        <b-icon-exclamation-diamond-fill v-if="variant=='danger'"></b-icon-exclamation-diamond-fill>
+        <b-icon-info-circle-fill v-if="variant=='info'"></b-icon-info-circle-fill>
         <strong>{{ name }}</strong> {{ message }}
     </b-alert>
 </template>
 
 <script>
-/*
-pass in alert with properties in the form...
-alert: {show: true,
-        showSpinner: true,
-        dismissible: false,
-        class: "loading",
-        variant: "info", //primary, secondary, success, danger, warning, info, light, dark
-        name: "Loading",
-        message: "Fetching Student List from Database"
-*/
+import { BIconExclamationDiamondFill, BIconInfoCircleFill } from "bootstrap-vue";
+
 export default {
+    components: {
+        BIconExclamationDiamondFill,
+        BIconInfoCircleFill
+    },
     //name: 'BaseAlert',
     props: {
         show: {type: Boolean, default: false},
         showSpinner: {type: Boolean, default: false},
         dismissible: {type: Boolean, default: false},
         variant: {type: String, default: "info"},
-        name: {type: String, required: false},
-        message: {type: String, required: true}
+        name: {type: String, default: 'no name'},
+        message: {type: String, default: 'no message'}
     }
 }
 </script>

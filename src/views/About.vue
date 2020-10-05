@@ -59,7 +59,7 @@
       this.$store.dispatch('replaceBreadcrumbs', [
         {
           text: 'Home',
-          to: {name: 'Home'}
+          to: {name: 'home'}
         },
         {
           text: 'About',
