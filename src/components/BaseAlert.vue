@@ -15,7 +15,7 @@ export default {
         BIconExclamationDiamondFill,
         BIconInfoCircleFill
     },
-    //name: 'BaseAlert',
+    name: 'BaseAlert',
     props: {
         show: {type: Boolean, default: false},
         showSpinner: {type: Boolean, default: false},

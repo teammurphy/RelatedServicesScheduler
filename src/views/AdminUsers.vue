@@ -1,23 +1,20 @@
 <template>
   <b-container>
-    <h1>Admin Vue</h1>
-    <h2>Users</h2>
+    <h1>Admin - Users</h1>
 
     <admin-add-role-modal :userId="userId" />
+    <base-confirm-deleteModal v-bind="deleteObject" />
 
     <b-table striped hover :items="users">
       <template v-slot:cell(roles)="data">
         <ul>
           <li v-for="role in data.item.roles" :key="role.id">
-            {{ role.name }}
+            {{ role.name }} {{ role.service }} {{ role.district }}{{ role.county }}{{ role.school }}<b-icon-trash color="red" @click="deleteRole(role)"></b-icon-trash>
           </li>
         </ul>
-        <!-- v-b-modal.role-add-modal -->
-        <b-button size="sm" variant="primary" @click="openAddRoleModal(data.item.id)"><b-icon-plus></b-icon-plus></b-button>
+        <b-button size="sm" variant="primary" @click="openAddRoleModal(data.item.id)"><b-icon-plus ></b-icon-plus> add role</b-button>
       </template>
     </b-table>
-
-    {{ users }}
 
     <base-alert v-bind="alert" />
   </b-container>
@@ -25,14 +22,17 @@
 
 <script>
 import BaseAlert from "@/components/BaseAlert.vue";
+import BaseConfirmDeleteModal from '@/components/BaseConfirmDeleteModal.vue'
 import AdminAddRoleModal from '@/components/AdminAddRoleModal.vue'
-import { BIconPlus } from "bootstrap-vue";
+import { BIconPlus, BIconTrash } from "bootstrap-vue";
 import axios from "axios";
 
 export default {
   components: {
     BaseAlert,
+    BaseConfirmDeleteModal,
     BIconPlus,
+    BIconTrash,
     AdminAddRoleModal
   },
   data() {
@@ -41,12 +41,21 @@ export default {
       users: [],
       userId: null,
       //user: {}
+      deleteObject: {path:"", message:""},
     };
   },
   methods: {
     openAddRoleModal(id) {
       this.userId = id
       this.$bvModal.show("role-add-modal")
+    },
+    deleteRole(role) {
+      this.deleteObject = {
+        //id, path to delete the document, and a enough text to identify that we are deleting the right thing
+        message: `Are you sure you want to delete the ${role.name} role (${role.service} ${role.district}${role.county}${role.school})?`,
+        path: "admin/role/" + role.id
+      }
+      this.$bvModal.show("base-confirm-delete-modal")
     }
   },
   created() {

@@ -11,6 +11,8 @@
             <router-link tag="b-nav-item" to="/students">Students</router-link>
             <router-link tag="b-nav-item" to="/users">Providers</router-link>
 
+            <router-link tag="b-nav-item" to="/mycaseload">My Caseload</router-link>
+
 
             <router-link tag="b-nav-item" to="/dashboard">Dashboard</router-link>
 

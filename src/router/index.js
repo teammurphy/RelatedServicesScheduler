@@ -1,6 +1,16 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+//general views
 import Home from '../views/Home.vue'
+import About from '../views/About.vue'
+//provider views
+import ProviderMyCaseload from '../views/ProviderMyCaseload'
+//admin views
+import AdminUsers from '../views/AdminUsers.vue'
+//auth views
+import AuthRegister from '../views/AuthRegister.vue'
+import AuthLogin from '../views/AuthLogin.vue'
+//not yet sorted
 import Students from '../views/Students.vue'
 import Student from '../views/Student.vue'
 import Users from '../views/Users.vue'
@@ -8,29 +18,35 @@ import User from '../views/User.vue'
 import DemoFullCalendar from '../views/DemoFullCalendar.vue'
 import MandateScheduler from '../views/MandateScheduler.vue'
 import Dashboard from '../views/Dashboard.vue'
-import AdminUsers from '../views/AdminUsers.vue'
-import AuthRegister from '../views/AuthRegister.vue'
-import AuthLogin from '../views/AuthLogin.vue'
-import About from '../views/About.vue'
 
 Vue.use(VueRouter)
 
-const routes = [{
+const routes = [
+  //general views
+  {
     path: '/',
     name: 'home',
     component: Home
   },
   {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: Dashboard,
+    path: '/about',
+    name: 'About',
+    component: About
+  },
+  //provider views
+  {
+    path: '/mycaseload',
+    name: 'mycaseload',
+    component: ProviderMyCaseload,
     meta: { requiresAuth: true }
   },
+  //admin views
   {
     path: '/adminusers',
     name: 'adminusers',
     component: AdminUsers
   },
+  //auth views
   {
     path: '/register',
     name: 'register',
@@ -41,6 +57,7 @@ const routes = [{
     name: 'login',
     component: AuthLogin
   },
+  //odds and ends - need to be sorted
   {
     path: '/demofullcalendar',
     name: 'DemoFullCalendar',
@@ -72,13 +89,10 @@ const routes = [{
     component: User
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    //component: () => import( /* webpackChunkName: "about" */ '../views/About.vue')
-    component: About
+    path: '/dashboard',
+    name: 'dashboard',
+    component: Dashboard,
+    meta: { requiresAuth: true }
   }
 ]
 
