@@ -35,6 +35,7 @@
 <script>
 import BaseAlert from "@/components/BaseAlert.vue";
 import { authComputed } from '../store/helpers.js'
+import AdminAPI from '../api/admin.js'
 
 export default {
     components: {
@@ -116,48 +117,14 @@ export default {
                 name: "Submitting",
                 message: "Adding role to database"
             }
-
-            const url = process.env.VUE_APP_ROOT_API + "admin/" + this.userId.toString() + "/role";
-            //this.form.user_id = this.userId
-            let headers = new Headers()
-            //const token = authComputed.getStoreToken()
-            const token = this.getStoreToken
-            headers.append('Content-Type', 'application/json')
-            if (token) {
-                headers.append('Authorization', `Bearer ${token}`)
+            const payload = await AdminAPI.addRole(this.userId, this.form)
+            if (payload.ok) {
+                this.alert = {}
+                this.hideModal()
+            } else {
+                this.alert = {show:true, variant: "danger", name: payload.name, message: payload.message}
             }
-            try { 
-                const response = await fetch(url, {
-                    method: 'POST',
-                    mode: 'cors',
-                    headers: headers,
-                    body: JSON.stringify(this.form)
-                });
-                //normally we do the .json here, but not using the data in this case if submitted successfully
-                //should be changed so we emit back to parent to update view
-                //const data = await response.json();  
-                if (response.ok) {
-                    //this.whatever = data
-                    this.alert = {}
-                    this.hideModal()
-                } else {
-                    const data = await response.json();
-                    this.alert = {
-                        show: true,
-                        variant: "danger",
-                        name: "Bad Response",
-                        message: data.message
-                    }
-                } 
-            } catch(error) {
-                this.alert = {
-                    show: true,
-                    variant: "danger",
-                    name: error.name,
-                    message: error.message
-                }
-            } 
-        },
-    },
+        }
+    }
 };
 </script>

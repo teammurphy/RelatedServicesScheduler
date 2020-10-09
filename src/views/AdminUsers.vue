@@ -25,7 +25,7 @@ import BaseAlert from "@/components/BaseAlert.vue";
 import BaseConfirmDeleteModal from '@/components/BaseConfirmDeleteModal.vue'
 import AdminAddRoleModal from '@/components/AdminAddRoleModal.vue'
 import { BIconPlus, BIconTrash } from "bootstrap-vue";
-import axios from "axios";
+import AdminAPI from '../api/admin.js'
 
 export default {
   components: {
@@ -56,6 +56,22 @@ export default {
         path: "admin/role/" + role.id
       }
       this.$bvModal.show("base-confirm-delete-modal")
+    },
+    async loadUsers() {
+      this.alert = {
+        show: true,
+        showSpinner: true,
+        variant: "info",
+        name: "Loading",
+        message: "Fetching User List from Database"
+      }
+      const payload = await AdminAPI.getAllUsers()
+      if (payload.ok) {
+        this.alert = {}
+        this.users = payload.data;
+      } else {
+        this.alert = {show:true, variant: "danger", name: payload.name, message: payload.message}
+      }
     }
   },
   created() {
@@ -72,29 +88,7 @@ export default {
     ]);
   },
   mounted() {
-    this.alert = {
-        show: true,
-        showSpinner: true,
-        variant: "info",
-        name: "Loading",
-        message: "Fetching User List from Database"
-      }
-    const url = process.env.VUE_APP_ROOT_API + "admin/users";
-    //axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-    axios
-      .get(url)
-      .then((response) => {
-        this.alert = {}
-        this.users = response.data;
-      })
-      .catch((error) => {
-        this.alert = {
-          show: true,
-          variant: "danger",
-          name: error.name,
-          message: error.message,
-        };
-      });
+    this.loadUsers()
   },
 };
 </script>

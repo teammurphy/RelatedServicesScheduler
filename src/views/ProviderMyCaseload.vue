@@ -23,7 +23,7 @@
             </template>
         </b-table>
 
-        <b-button variant="primary" @click="addStudentToCaseload">Add student to this caseload</b-button>
+        <case-add-modal v-bind:caseloadId="selectedCaseload"/>
     
     </b-card>
 </b-container>
@@ -34,8 +34,10 @@ import UserCard from '@/components/UserCard.vue'
 import BaseAlert from "@/components/BaseAlert.vue";
 import BaseConfirmDeleteModal from '@/components/BaseConfirmDeleteModal.vue'
 import CaseloadAddModal from '@/components/CaseloadAddModal.vue'
+import CaseAddModal from '@/components/CaseAddModal.vue'
 import { BIconTrash } from "bootstrap-vue";
 import { authComputed } from '../store/helpers.js'
+import StudentsAPI from '../api/students.js'
 
 export default {
     components: {
@@ -43,6 +45,7 @@ export default {
         BaseAlert,
         BaseConfirmDeleteModal,
         CaseloadAddModal,
+        CaseAddModal,
         BIconTrash
     },
     computed: {
@@ -99,9 +102,6 @@ export default {
         addCaseload() {
             this.$bvModal.show("caseload-add-modal")
         },
-        addStudentToCaseload() {
-            alert("give some mechanism for adding a student to a caseload")
-        },
         deleteCase(caseObj) {
             this.deleteObject = {
                 message: `Are you sure you want to drop ${caseObj.item.first_name} ${caseObj.item.last_name} from this caseload?`,
@@ -125,51 +125,20 @@ export default {
                 name: "Retrieving",
                 message: "Retrieving caseload from database"
             }
-
             //need to set this.selectedCaseloadTitle
             const selectedOption = this.caseloadOptions.filter(obj => {
                 return obj.value === this.selectedCaseload
             })
             this.selectedCaseloadTitle = selectedOption[0].text
-
-
-            //path to this api route should be changed to students/bycaseloadid/:caseloadid
-            const url = process.env.VUE_APP_ROOT_API + "students/" + this.selectedCaseload
-            //this.form.user_id = this.userId
-            let headers = new Headers()
-            //const token = authComputed.getStoreToken()
-            const token = this.getStoreToken
-            headers.append('Content-Type', 'application/json')
-            if (token) {
-                headers.append('Authorization', `Bearer ${token}`)
-            }
-            try { 
-                const response = await fetch(url, {
-                    mode: 'cors',
-                    headers: headers,
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    this.caseload = data
-                    this.alert = {}
-                } else {
-                    this.caseload = []
-                    this.alert = {
-                        show: true,
-                        variant: "danger",
-                        name: "Bad Response",
-                        message: data.message
-                    }
-                } 
-            } catch(error) {
+            const payload = await StudentsAPI.getCaseloadStudents(this.selectedCaseload)
+            if (payload.ok) {
+                this.caseload = payload.data
+                this.alert = {}
+            } else {
+                this.alert = {show:true, variant: "danger", name: payload.name, message: payload.message}
                 this.caseload = []
-                this.alert = {
-                    show: true,
-                    variant: "danger",
-                    name: error.name,
-                    message: error.message
-                }
             }
+        
         }
     }
 }

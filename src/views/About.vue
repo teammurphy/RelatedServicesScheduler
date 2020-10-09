@@ -53,9 +53,17 @@
 </template>
 
 <script>
+import StudentsAPI from '../api/students.js'
+
   export default {
     created() {
       //now set the vuex breadcrumbs state so breadcrumbs are updated
+
+      console.log("here")
+      StudentsAPI.getStudent(1)
+      console.log("there")
+
+
       this.$store.dispatch('replaceBreadcrumbs', [
         {
           text: 'Home',

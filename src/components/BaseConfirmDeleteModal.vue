@@ -30,6 +30,7 @@
 <script>
 import BaseAlert from '@/components/BaseAlert.vue'
 import { authComputed } from '../store/helpers.js'
+import API from '../api/api.js'
 
 export default {
     components: {
@@ -85,43 +86,13 @@ export default {
         },
         async killDocument() {
             const url = process.env.VUE_APP_ROOT_API + this.path;
-            let headers = new Headers()
-            const token = this.getStoreToken
-            headers.append('Content-Type', 'application/json')
-            if (token) {
-                headers.append('Authorization', `Bearer ${token}`)
+            const payload = await API.delete(url)
+            if (payload.ok) {
+                this.alert = {}
+                this.hideModal()
+            } else {
+                this.alert = {show:true, variant: "danger", name: payload.name, message: payload.message}
             }
-            try { 
-                const response = await fetch(url, {
-                    method: 'Delete',
-                    mode: 'cors',
-                    headers: headers
-                });
-                //normally we do the .json here, but not using the data in this case if submitted successfully
-                //should be changed so we emit back to parent to update view
-                //const data = await response.json();  
-                if (response.ok) {
-                    //this.whatever = data
-                    this.alert = {}
-                    this.hideModal()
-                } else {
-                    const data = await response.json();
-                    this.alert = {
-                        show: true,
-                        variant: "danger",
-                        name: "Bad Response",
-                        message: data.message
-                    }
-                } 
-            } catch(error) {
-                this.alert = {
-                    show: true,
-                    variant: "danger",
-                    name: error.name,
-                    message: error.message
-                }
-            }
-
         }
     }
 }
