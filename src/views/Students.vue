@@ -1,10 +1,10 @@
 <template>
   <b-container class="students">
+    <base-alert v-bind="alert" />
+    <student-create-modal @on-student-added="onAddStudent" />
+
     <h1>Students</h1>
 
-    <base-alert v-bind="alert" />
-
-    <Student_Create_Modal/>
     <div v-if="studentlist" class="content">
 
       <b-table striped hover :items="studentlist">
@@ -13,53 +13,59 @@
             {{ data.item.firstName }}
           </router-link>
         </template>
-      </b-table>
+      </b-table> 
 
     </div>
   </b-container>
 </template>
 
 <script>
-import Student_Create_Modal from '@/components/Student_Create_Modal.vue'
+import StudentCreateModal from '@/components/StudentCreateModal.vue'
 import BaseAlert from '@/components/BaseAlert.vue'
+import StudentAPI from '../api/students.js'
 
 export default {
   components: {
-    Student_Create_Modal,
+    StudentCreateModal,
     BaseAlert
   },
+
   data () {
     return {
       alert: {},
       studentlist: null,
     }
   },
+
   created () {
     // fetch the data when the view is created and the data is
     // already being observed
     this.displayBreadcrumbs();
     this.getStudents();
   },
+
   watch: {
     // call again the method if the route changes
     '$route': 'getStudents'
   },
+
   methods: {
     displayBreadcrumbs() {
       //now set the vuex breadcrumbs state so breadcrumbs are updated
       this.$store.dispatch('replaceBreadcrumbs', [
-        {
-          text: 'Home',
-          to: {name: 'home'}
-        },
-        {
-          text: 'Students',
-          active: true
-        }
+        {text: 'Home', to: {name: 'home'}},
+        {text: 'Students', active: true}
       ]);
     },
+
+    onAddStudent(student) {
+      //listen for the emit of the child StudentCreateModal
+      this.studentlist.push(student)
+      //or should it be ...
+      //this.getStudents()
+    },
+
     async getStudents() {
-      this.studentlist = null
       this.alert = {
         show: true,
         showSpinner: true,
@@ -67,33 +73,13 @@ export default {
         name: "Loading",
         message: "Fetching Student List from Database"
       }
-
-      const url = process.env.VUE_APP_ROOT_API + 'students';
-      try {
-        const response = await fetch(url, {
-          headers: {
-            'Content-Type':'application/json'
-          }
-        });
-        if (!response.ok) {
-          //we got response - but not one we like - like a 404 or something
-          throw new Error({
-            name: response.status, 
-            message: response.statusText
-          });
-        }
-        //good response, now lets try get the payload
-        const data = await response.json();
-        this.studentlist = data;
-        this.alert = {}
-      } catch(error) {
-        this.alert = {
-          show: true,
-          variant: "danger",
-          name: error.name,
-          message: error.message
-        }
-      } 
+      const payload = await StudentAPI.getStudents()
+      if (payload.ok) {
+            this.alert = {}
+            this.studentlist = payload.data
+      } else {
+            this.alert = {show:true, variant: "danger", name: payload.name, message: payload.message}
+      }
     }
   }
 }

@@ -3,16 +3,15 @@
 
     <b-modal id="caseload-add-modal" ref="caseloadAddModal" title="Add Caseload?" @show="resetModal" @hidden="resetModal" header-bg-variant="primary" header-text-variant="white" @ok=handleOk>
         
-        <b-form ref="form" @submit.stop.prevent="handleSubmit">
+        <b-form ref="form" @submit.stop.prevent="handleOk">
 
             <b-form-group label="title" label-for="title">
-                <b-form-input id="title"></b-form-input>
+                <b-form-input v-model="form.title" id="title"></b-form-input>
             </b-form-group>
 
             <b-form-group label="Related Service Area" label-for="service">
-                <b-form-select id="service" v-model="selectedArea" :options="serviceAreas"></b-form-select>
+                <b-form-select id="service" v-model="form.service" :options="serviceAreas"></b-form-select>
             </b-form-group>
-
         </b-form>
 
         <base-alert v-bind="alert" />
@@ -24,6 +23,7 @@
 
 <script>
 import BaseAlert from '@/components/BaseAlert.vue'
+import CaseloadAPI from '../api/caseload.js'
 import { authComputed } from '../store/helpers.js'
 
 export default {
@@ -40,15 +40,18 @@ export default {
     data() {
         return {
             alert: {},
-            selectedArea: ''
+            form: {
+                title: "",
+                service: ""
+            },
         }
     },
     created() {
-        this.selectedArea = this.serviceAreas[0]
+        this.form.service = this.serviceAreas[0]
     },
     methods: {
         resetModal() {
-            this.title = ''
+            this.form.title = ''
         },
         clearAlert() {
             this.alert = {}
@@ -57,6 +60,7 @@ export default {
             this.resetModal();
             this.$refs['caseloadAddModal'].hide();
         },
+
         handleOk(bvModalEvt) {
             //prevent modal from closing
             bvModalEvt.preventDefault();
@@ -70,45 +74,25 @@ export default {
             
         },
         async addCaseload() {
-            const url = process.env.VUE_APP_ROOT_API + "caseload"
-            let headers = new Headers()
-            const token = this.getStoreToken
-            this.form.user_id = this.user.id
-            headers.append('Content-Type', 'application/json')
-            if (token) {
-                headers.append('Authorization', `Bearer ${token}`)
-            }
-            try { 
-                const response = await fetch(url, {
-                    method: 'Post',
-                    mode: 'cors',
-                    headers: headers,
-                    body: JSON.stringify(this.form)
-                });
-                //normally we do the .json here, but not using the data in this case if submitted successfully
-                //should be changed so we emit back to parent to update view
-                const data = await response.json();
-                if (response.ok) {
-                    //this.whatever = data
-                    this.alert = {}
-                    this.hideModal()
-                } else {
-                    this.alert = {
-                        show: true,
-                        variant: "danger",
-                        name: "Bad Response",
-                        message: data.message
-                    }
-                } 
-            } catch(error) {
+            this.alert = {show: true, showSpinner: true, variant: "info", name: "Submitting", message: "sending caseload to server"}
+            this.form.user_id = this.userId
+            const payload = await CaseloadAPI.addCaseload(this.form)
+            if (payload.ok) {
+                this.alert = {}
+                //send caseload back up to parent
+                this.$emit('on-add-caseload', payload.data)
+                this.resetModal()
+                this.$refs["caseloadAddModal"].hide();
+                //this needs to do an emit back to the calling form with payload.data
+            } else {
+                console.log(payload)
                 this.alert = {
                     show: true,
                     variant: "danger",
-                    name: error.name,
-                    message: error.message
+                    name: "Error",
+                    message: "Could not submit caseload to database"
                 }
             }
-
         }
     }
 }

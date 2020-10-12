@@ -89,6 +89,7 @@ export default {
             const payload = await API.delete(url)
             if (payload.ok) {
                 this.alert = {}
+                this.$emit('on-delete', payload.data)
                 this.hideModal()
             } else {
                 this.alert = {show:true, variant: "danger", name: payload.name, message: payload.message}

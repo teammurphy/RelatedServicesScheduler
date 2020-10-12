@@ -2,30 +2,28 @@
   <div class="admin-add-role-modal">
     <b-modal id="role-add-modal" ref="roleAddModal" title="Add Role" @show="resetModal" header-bg-variant="primary" header-text-variant="white" @hidden="resetModal" @ok="handleOk">
 
-      <h1>id: {{ userId }}</h1>
+      <base-alert v-bind="alert" />
 
       <b-form ref="form" @submit.stop.prevent="handleSubmit">
-        <b-form-group label="Role" label-for="name-input" invalid-feedback="Role is required">
-            <b-form-select id="name-input" v-model="form.name" :options="roleOptions"></b-form-select>
+        <b-form-group label="Role" label-for="name-select" invalid-feedback="Role is required">
+            <b-form-select id="name-select" v-model="form.name" :options="roleOptions"></b-form-select>
         </b-form-group>
 
-        <b-form-group label="Related Service Area" label-for="service-input">
-            <b-form-select id="service-input" v-model="form.service" :options="serviceOptions"></b-form-select>
+        <b-form-group label="Related Service Area" label-for="service-select">
+            <b-form-select id="service-select" v-model="form.service" :options="serviceOptions"></b-form-select>
         </b-form-group>
 
-        <b-form-group label="County" label-for="county-input" invalid-feedback="County is required">
-            <b-form-select id="county-input" v-model="form.county" :options="countyOptions"></b-form-select>
+        <b-form-group label="County" label-for="county-select" invalid-feedback="County is required">
+            <b-form-select id="county-select" v-model="form.county" :options="countyOptions"></b-form-select>
         </b-form-group>
 
-        <b-form-group label="District" label-for="district-input">
-            <b-form-input type="text" id="district-input" v-model="form.district" />
+        <b-form-group label="District" label-for="district-select">
+            <b-form-select id="district-select" v-model="form.district" :options="districtOptions" @change="getSchools"></b-form-select>
         </b-form-group>
 
-        <b-form-group label="School" label-for="school-input">
-            <b-form-input type="text" id="school-input" v-model="form.school" />
+        <b-form-group label="School" label-for="school-select">
+            <b-form-select id="school-select" v-model="form.school_id" :options="schoolOptions"></b-form-select>
         </b-form-group>
-
-        <base-alert v-bind="alert" />
 
       </b-form>
     </b-modal>
@@ -36,6 +34,7 @@
 import BaseAlert from "@/components/BaseAlert.vue";
 import { authComputed } from '../store/helpers.js'
 import AdminAPI from '../api/admin.js'
+import SchoolAPI from '../api/school.js'
 
 export default {
     components: {
@@ -52,7 +51,7 @@ export default {
             testToken: "",
             form: {
                 name: "",
-                school: "",
+                school_id: "",
                 district: "",
                 county: "",
                 service: ""
@@ -61,20 +60,26 @@ export default {
             alert: {},
             roleOptions: ['admin', 'provider', 'supervisor'],
             countyOptions: ['Q', 'K', 'R', 'X', 'M'],
-            serviceOptions: ["Speech", "OT", "PT"]
+            serviceOptions: ["Speech", "OT", "PT"],
+            schoolOptions: [],
+            districtOptions: []
         };
+    },
+    mounted() {
+        let i
+        let districts = []
+        for (i=1; i<33; i++) {
+            districts.push(i.toString())
+        }
+        districts.push("75")
+        this.districtOptions = districts
     },
     methods: {
         checkFormValidity() {
             //some checks before we actually submit name message
             const isValid = this.$refs.form.checkValidity();
             if (!isValid) {
-                this.alert = {
-                    show: true,
-                    variant: "danger",
-                    name: "Validation Error",
-                    message: "Error validating fields",
-                };
+                this.alert = {show: true, variant: "danger", name: "Validation Error", message: "Error validating fields"}
                 //we need to look at each field in turn to know which were the problems
                 for (const property in this.state) {
                     this.state[property] = this.form[property].trim().length > 0 ? true : false;
@@ -109,14 +114,25 @@ export default {
             //we can set data = this.form, and then pass that to handle submit if we need to massage
             this.submitRole();
         },
-        async submitRole() {
-            this.alert = {
-                show: true,
-                showSpinner: true,
-                variant: "info",
-                name: "Submitting",
-                message: "Adding role to database"
+
+        async getSchools() {
+            this.alert = {show: true, showSpinner: true, variant: "info", name: "Loading", message: "Loading school list"}
+            const payload = await SchoolAPI.getSchoolsByDistrict(this.form.district)
+            if (payload.ok) {
+                this.alert = {}
+
+                const tempSchoolOptions = this.payload.data.map(function(item) { 
+                    return {value: item.id, text: `${item.dbn} ${item.name}`}
+                });
+
+                this.schoolOptions = tempSchoolOptions
+            } else {
+                this.alert = {show:true, variant: "danger", name: payload.name, message: payload.message}
             }
+        },
+
+        async submitRole() {
+            this.alert = { show: true, showSpinner: true, variant: "info", name: "Submitting", message: "Adding role to database"}
             const payload = await AdminAPI.addRole(this.userId, this.form)
             if (payload.ok) {
                 this.alert = {}

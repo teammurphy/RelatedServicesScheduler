@@ -7,20 +7,20 @@ const apiRootURL = process.env.VUE_APP_ROOT_API
 
 export default {
     getStudents() {
-        //return vue of all students
-        alert("in getStudents")
+        //return vue of all students you can see
+        const url = `${apiRootURL}students`
+        return genericAPI.get(url)
     },
 
     getStudentsBySchools(schools) {
         //given an array of school ids, will return all students in one of those schools
-        alert("in getStudentsBySchools")
         //post where we pass the array in the body
         //or get where we pass the array as query strings id /getStudentsBySchools?school=30Q211&school=30Q11
         //check that passing function in caseaddmodal actually does the unique
         const qs = schools.map(school=>"school=" + school).join('&')
         const url = `${apiRootURL}students/schools?${qs}`
         return genericAPI.get(url)
-    }
+    },
 
     getStudent(id) {
         //return one student
@@ -34,8 +34,9 @@ export default {
 
     },
 
-    createStudent(payload) {
-        alert("in student.js.createStudent" + JSON.stringify(payload))
+    createStudent(student) {
+        const url = `${apiRootURL}student`
+        return genericAPI.post(url, student)
     },
 
     deleteStudent(id) {

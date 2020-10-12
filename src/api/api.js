@@ -1,9 +1,12 @@
 /*
 *   the generic calls using fetch
 */
-//const apiRootURL = process.env.VUE_APP_ROOT_API
 
 export default {
+    getAPIRoot() {
+        return process.env.VUE_APP_ROOT_API
+    },
+
     getToken() {
         let token = null
         try {
@@ -16,13 +19,15 @@ export default {
     },
 
     async genericFetch(request) {
+        //note - if we start using headers to request other than json, will need to re-think
         try {
             const response = await fetch(request)
+            const data =  await response.json()
             if (response.ok) {
-                const data =  await response.json()
                 return {ok: true, data: data}
             } else {
-                throw {ok:false, name:response.status.toString(), message:response.statusText}
+                console.log(data)
+                throw {ok:false, name:response.status.toString(), message:data.detail}
             }
         } catch (e) {
             console.error(e)
@@ -35,6 +40,8 @@ export default {
         const token = this.getToken()
         let headers = new Headers()
         headers.append('Content-Type', 'application/json')
+        //do we need this if we are using cors mode in the request?
+        //headers.append('Access-Control-Allow-Origin', '*')
         if (token) {
             headers.append('Authorization', `Bearer ${token}`)
         }
@@ -52,6 +59,8 @@ export default {
         const token = this.getToken()
         let headers = new Headers()
         headers.append('Content-Type', 'application/json')
+        //do we need this if we are using cors mode in the request?
+        //headers.append('Access-Control-Allow-Origin', '*')
         if (token) {
             headers.append('Authorization', `Bearer ${token}`)
         }

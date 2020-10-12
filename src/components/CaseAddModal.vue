@@ -19,7 +19,7 @@
             <b-form-select id="studentSelect" v-model="selectedStudentId" :options="studentOptions" @change="getStudentToAdd"></b-form-select>
         </b-form-group>
 
-        <b-button v-if="selectedStudentId" @click="postStudentToDatabase" variant="primary"><b-icon-plus ></b-icon-plus> Add {{ selectedStudentName }} to Caseload</b-button>
+        <b-button v-if="selectedStudentId" @click="createCase" variant="primary"><b-icon-plus ></b-icon-plus> Add {{ selectedStudentName }} to Caseload</b-button>
 
         <b-nav align='end'>
             <b-button variant="danger" @click="$bvModal.hide('case-add-modal')">Cancel</b-button>
@@ -34,7 +34,7 @@ import BaseAlert from "@/components/BaseAlert.vue";
 import { BIconPlus } from "bootstrap-vue";
 import { authComputed } from '../store/helpers.js'
 import CaseAPI from '../api/case.js'
-import StudentAPI from '../api/student.js'
+import StudentAPI from '../api/students.js'
 
 export default {
     components: {
@@ -59,6 +59,13 @@ export default {
             selectedStudentName: ''
         };
     },
+
+    created() {console.log("created")},
+
+    mounted() {
+        this.getStudentList()
+    },
+
     methods: {
         hideModal() {
             this.resetModal();
@@ -94,9 +101,31 @@ export default {
             const roles = this.getStoreRoles
             const schools = roles.map(role => role.school).filter((v, i, a) => a.indexOf(v) === i)
             const payload = await StudentAPI.getStudentsBySchools(schools)
+            if (payload.ok) {
+                //use map to set data.text = full student name, and value to studentId
+                const tempStudentOptions = this.payload.data.map(function(item) { 
+                    return {value: item.id, text: `${item.first_name} ${item.last_name}`}
+                });
+                /*
+                const tempStudentOptions = this.payload.data.map(item => {
+ 	                return {value: item.id, text: `${item.first_name} ${item.last_name}`}
+                })
+                */
+                this.studentOptions = tempStudentOptions
+                this.alert = {}
+            } else {
+                this.alert = {
+                    show: true,
+                    variant: "danger",
+                    name: "Error",
+                    message: "Could not get list of students from database"
+                }
+                this.studentOptions = []
+            }
         },
 
-        async postStudentToDatabase() {
+        async createCase() {
+            //create the Case document in the database to associate student with this caseload
             this.alert = {
                 show: true,
                 showSpinner: true,
