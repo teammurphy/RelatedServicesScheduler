@@ -1,8 +1,10 @@
 <template>
 <div class="base-confirm-delete">
 
-    <b-modal id="base-confirm-delete-modal" ref="confirmDeleteModal" title="Are you sure?" @show="resetModal" @hidden="resetModal" header-bg-variant="primary" header-text-variant="white" @ok=handleOk>
-        
+    <b-modal ref="confirmDeleteModal" title="Are you sure?" @show="resetModal" @hidden="resetModal" header-bg-variant="primary" header-text-variant="white" @ok=handleOk>
+        id="base-confirm-delete-modal"
+        path = {{ path }}
+        message = {{ message }}
         <b-form ref="form" @submit.stop.prevent="handleSubmit">
             <p>{{ message }}</p>
 
@@ -33,6 +35,7 @@ import { authComputed } from '../store/helpers.js'
 import API from '../api/api.js'
 
 export default {
+    name: "BaseConfirmDeleteModal",
     components: {
         BaseAlert
     },

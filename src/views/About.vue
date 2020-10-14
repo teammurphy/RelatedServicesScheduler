@@ -1,5 +1,6 @@
 <template>
 <b-container>
+
   <h1>Related Service Scheduler</h1>
   <p>
     A Vue.js app to manage related services scheduling.  Will be using fullcalendar
@@ -53,17 +54,11 @@
 </template>
 
 <script>
-import StudentsAPI from '../api/students.js'
 
   export default {
+    name: "About",
     created() {
       //now set the vuex breadcrumbs state so breadcrumbs are updated
-
-      console.log("here")
-      StudentsAPI.getStudent(1)
-      console.log("there")
-
-
       this.$store.dispatch('replaceBreadcrumbs', [
         {
           text: 'Home',
@@ -74,6 +69,12 @@ import StudentsAPI from '../api/students.js'
           active: true
         }
       ]);
+    },
+    methods: {
+      studentSelectHandler(student) {
+        //given a student by the StudentSelect component - do something
+        console.log(student.text)
+      }
     }
   }
 </script>

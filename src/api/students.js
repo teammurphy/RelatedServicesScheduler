@@ -12,13 +12,21 @@ export default {
         return genericAPI.get(url)
     },
 
-    getStudentsBySchools(schools) {
+    getStudentsBySchools(schoolIds) {
+        //badly named - rename to getStudentsBySchoolIds - but see note in next function to see if even needed
         //given an array of school ids, will return all students in one of those schools
         //post where we pass the array in the body
         //or get where we pass the array as query strings id /getStudentsBySchools?school=30Q211&school=30Q11
         //check that passing function in caseaddmodal actually does the unique
-        const qs = schools.map(school=>"school=" + school).join('&')
+        const qs = schoolIds.map(id=>"school_id=" + id).join('&')
         const url = `${apiRootURL}students/schools?${qs}`
+        return genericAPI.get(url)
+    },
+
+    getStudentsBySchoolId(schoolId) {
+        //given a school id, will return all students in school
+        //simpler version of above - could have used above - may not need both - check
+        const url = `${apiRootURL}students/school/${schoolId}`
         return genericAPI.get(url)
     },
 

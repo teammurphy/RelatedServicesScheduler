@@ -58,7 +58,7 @@ export default {
             },
             state: {name: null, school: null, district: null, county: null, service: null},
             alert: {},
-            roleOptions: ['admin', 'provider', 'supervisor'],
+            roleOptions: ['admin', 'provider', 'supervisor', 'principal', 'student'],
             countyOptions: ['Q', 'K', 'R', 'X', 'M'],
             serviceOptions: ["Speech", "OT", "PT"],
             schoolOptions: [],
@@ -121,7 +121,7 @@ export default {
             if (payload.ok) {
                 this.alert = {}
 
-                const tempSchoolOptions = this.payload.data.map(function(item) { 
+                const tempSchoolOptions = payload.data.map(function(item) { 
                     return {value: item.id, text: `${item.dbn} ${item.name}`}
                 });
 

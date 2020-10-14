@@ -14,5 +14,11 @@ export default {
         //given a caseload, let us put it in the databsae
         const url =  `${genericAPI.getAPIRoot()}caseload`
         return genericAPI.post(url, caseload)
+    },
+
+    deleteCaseload(id) {
+        //given a caseload id, get rid of it
+        const url =  `${genericAPI.getAPIRoot()}caseload/${id}`
+        return genericAPI.delete(url)
     }
 }

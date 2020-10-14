@@ -13,5 +13,11 @@ export default {
         const url =  `${apiRootURL}case`
         const data = {caseload_id: caseloadId, student_id: studentId}
         return genericAPI.post(url,data)
+    },
+
+    deleteCase(id) {
+        //given a case id, remove student from this caseload
+        const url =  `${genericAPI.getAPIRoot()}case/${id}`
+        return genericAPI.delete(url)
     }
 }

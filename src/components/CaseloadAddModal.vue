@@ -27,6 +27,7 @@ import CaseloadAPI from '../api/caseload.js'
 import { authComputed } from '../store/helpers.js'
 
 export default {
+    name: "CaseloadAddModal",
     components: {
         BaseAlert
     },
@@ -64,12 +65,7 @@ export default {
         handleOk(bvModalEvt) {
             //prevent modal from closing
             bvModalEvt.preventDefault();
-            this.alert = {
-                show: true,
-                variant: "info",
-                name: "Create Caseload",
-                message: "Creating new Caseload."
-            }
+            this.alert = {show: true, variant: "info", name: "Create Caseload", message: "Creating new Caseload."}
             this.addCaseload()
             
         },
@@ -86,12 +82,7 @@ export default {
                 //this needs to do an emit back to the calling form with payload.data
             } else {
                 console.log(payload)
-                this.alert = {
-                    show: true,
-                    variant: "danger",
-                    name: "Error",
-                    message: "Could not submit caseload to database"
-                }
+                this.alert = {show: true, variant: "danger", name: "Error", message: "Could not submit caseload"}
             }
         }
     }

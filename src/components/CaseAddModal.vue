@@ -1,4 +1,4 @@
-<template>
+.<template>
 <div class="auth-login-modal">
     
     <b-button v-b-modal.case-add-modal variant="primary">Add Students to Caseload</b-button>
@@ -13,13 +13,16 @@
                 </b-list-group-item>
             </b-list-group>
         </b-card>
-        
 
-        <b-form-group label="Student" label-for="student-id-input" invalid-feedback="Student is required">
-            <b-form-select id="studentSelect" v-model="selectedStudentId" :options="studentOptions" @change="getStudentToAdd"></b-form-select>
+        <b-form-group v-if="schoolOptions.length>1" label="Select School" label-for="school-id-select">
+            <b-form-select id="school-id=select" v-model="schoolId" :options="schoolOptions"></b-form-select>
         </b-form-group>
 
-        <b-button v-if="selectedStudentId" @click="createCase" variant="primary"><b-icon-plus ></b-icon-plus> Add {{ selectedStudentName }} to Caseload</b-button>
+        <b-form-group label="Select Student" label-for="student-select">
+            <student-select id="student-select" :schoolId="schoolId" v-on:studentSelected="studentSelectHandler" :key=schoolId />
+        </b-form-group>
+
+        <b-button @click="createCase" variant="primary"><b-icon-plus ></b-icon-plus> Add {{ selectedStudent.full_name }} to Caseload</b-button>
 
         <b-nav align='end'>
             <b-button variant="danger" @click="$bvModal.hide('case-add-modal')">Cancel</b-button>
@@ -31,14 +34,16 @@
 
 <script>
 import BaseAlert from "@/components/BaseAlert.vue";
+import StudentSelect from "@/components/StudentSelect.vue";
 import { BIconPlus } from "bootstrap-vue";
 import { authComputed } from '../store/helpers.js'
 import CaseAPI from '../api/case.js'
-import StudentAPI from '../api/students.js'
 
 export default {
+    name: "CaseAddModal",
     components: {
         BaseAlert,
+        StudentSelect,
         BIconPlus
     },
     props: {
@@ -50,96 +55,50 @@ export default {
     data() {
         return {
             alert: {},
+            schoolId: null,
             studentsAddedToCaseload: [],
-            studentOptions: [
-                {value: 1, text: "Freddy Mercury"},
-                {value: 3, text: "Momma Katz"}
-            ],
-            selectedStudentId: null,
-            selectedStudentName: ''
+            selectedStudent: {},
+            schoolOptions: []
         };
     },
 
-    created() {console.log("created")},
-
-    mounted() {
-        this.getStudentList()
+    created() {
+        this.schoolOptions = this.getStoreRoles.map(role => role.school_id)
+        if (this.schoolOptions.length) {
+            this.schoolId = this.schoolOptions[0]
+        } else {
+            this.schoolId = null
+        } 
     },
 
     methods: {
+        studentSelectHandler(student) {
+            //given a student by the StudentSelect component - do something
+            console.log(student.text)
+            this.selectedStudent = student
+        },
+
         hideModal() {
             this.resetModal();
             this.$refs["roleAddModal"].hide();
         },
+
         resetModal() {
             //blank everything else out
             this.alert = {}
             this.studentsAddedToCaseload = []
-            this.selectedStudentId = null
-            this.selectedStudentName = ''
+            this.selectedStudent = {}
         },
        
-        getStudentToAdd() {
-            //set the button to the students name
-            const selectedOption = this.studentOptions.filter(obj => {
-                return obj.value === this.selectedStudentId
-            })
-            this.selectedStudentName = selectedOption[0].text
-            //
-        },
-
-        async getStudentList() {
-            //here is where we run to database and get all students that this provider is allowed to see to let 
-            //provider select from them
-            this.alert = {
-                show: true,
-                showSpinner: true,
-                variant: "info",
-                name: "Fetching",
-                message: "Getting list of students from database"
-            }
-            const roles = this.getStoreRoles
-            const schools = roles.map(role => role.school).filter((v, i, a) => a.indexOf(v) === i)
-            const payload = await StudentAPI.getStudentsBySchools(schools)
-            if (payload.ok) {
-                //use map to set data.text = full student name, and value to studentId
-                const tempStudentOptions = this.payload.data.map(function(item) { 
-                    return {value: item.id, text: `${item.first_name} ${item.last_name}`}
-                });
-                /*
-                const tempStudentOptions = this.payload.data.map(item => {
- 	                return {value: item.id, text: `${item.first_name} ${item.last_name}`}
-                })
-                */
-                this.studentOptions = tempStudentOptions
-                this.alert = {}
-            } else {
-                this.alert = {
-                    show: true,
-                    variant: "danger",
-                    name: "Error",
-                    message: "Could not get list of students from database"
-                }
-                this.studentOptions = []
-            }
-        },
-
         async createCase() {
             //create the Case document in the database to associate student with this caseload
-            this.alert = {
-                show: true,
-                showSpinner: true,
-                variant: "info",
-                name: "Submitting",
-                message: "Adding student to caseload"
-            }
-            const payload = await CaseAPI.addCase(this.caseloadId, this.selectedStudentId)
+            this.alert = {show: true, showSpinner: true, variant: "info", name: "Submitting", message: "Adding student to caseload"}
+            const payload = await CaseAPI.addCase(this.caseloadId, this.selectedStudent.id)
             if (payload.ok) {
                 this.alert = {}
                 //add to list of added students
-                this.studentsAddedToCaseload.push(this.selectedStudentName)
-                this.selectedStudentName = ''
-                this.selectedStudentId = null
+                this.studentsAddedToCaseload.push(this.selectedStudent.full_name)
+                this.selectedStudent = {}
             } else {
                 this.alert = {show:true, variant: "danger", name: payload.name, message: payload.message}
             }

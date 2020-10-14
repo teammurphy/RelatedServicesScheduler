@@ -17,7 +17,7 @@
                 <b-form-input id="last_name-input" v-model="form.last_name"></b-form-input>
             </b-form-group>
 
-            <b-form-group label="DBN" label-for="school_id-input" invalid-feedback="DBN is required">
+            <b-form-group label="School ID" label-for="school_id-input" invalid-feedback="School ID is required">
                 <b-form-input id="school_id-input" v-model="form.school_id" :state="schoolIdState" required></b-form-input>
             </b-form-group>
 
@@ -96,15 +96,10 @@ export default {
       //some checks before we actually submit name message
       const isValid = this.$refs.form.checkValidity();
       if (!isValid) {
-        this.alert = {
-          show: true,
-          variant: "danger",
-          name: "Validation Error",
-          message: "error validating fields",
-        };
+        this.alert = {show: true, variant: "danger", name: "Validation Error", message: "error validating fields"};
         //we need to look at each field in turn to know which were the problems
-        this.firstNameState = this.form.firstName.trim().length > 0 ? true : false;
-        this.schoolIdState = this.form.schoolId.trim().length > 0 ? true : false;
+        this.firstNameState = this.form.first_name.trim().length > 0 ? true : false;
+        this.schoolIdState = this.form.school_id.trim().length > 0 ? true : false;
       } else {
         this.alert = {}
         this.firstNameState = true;
@@ -138,19 +133,14 @@ export default {
     },
 
     async handleSubmit() {
-        this.alert = {
-            show: true,
-            showSpinner: true,
-            variant: "info",
-            name: "Loading",
-            message: "Submitting new student",
-        };
+        this.alert = {show: true, showSpinner: true, variant: "info", name: "Loading", message: "Submitting new student",};
         this.showModalOverlay = true;
 
         const payload = await StudentAPI.createStudent(this.form)
         if (payload.ok) {
             this.alert = {}
             this.$emit('on-student-added', payload.data)
+            this.resetModal()
             //this.hideModal()
         } else {
             this.alert = {show:true, variant: "danger", name: payload.name, message: payload.message}
