@@ -17,8 +17,12 @@
                 <b-form-input id="last_name-input" v-model="form.last_name"></b-form-input>
             </b-form-group>
 
+            <b-form-group label="District" >
+              <base-select-district @district-has-changed="handleDistrictChange" />              
+            </b-form-group>
+
             <b-form-group label="School ID" label-for="school_id-input" invalid-feedback="School ID is required">
-                <b-form-input id="school_id-input" v-model="form.school_id" :state="schoolIdState" required></b-form-input>
+              <base-select-school-by-district v-bind:district="form.district" :key="form.district" @school-has-changed="handleSchoolChange"/>
             </b-form-group>
 
             <b-form-group label="OSIS #" label-for="OSIS-input" invalid-feedback="OSIS is required">
@@ -30,7 +34,7 @@
             </b-form-group>
 
             <b-form-group label="Grade" label-for="grade-select" invalid-feedback="Grade is required">
-                <b-form-select v-model="form.grade" id="grade-select" :options="gradeOptions"></b-form-select>
+              <base-select-grade @grade-has-changed="handleGradeChange" /> 
             </b-form-group>
 
         </b-form>
@@ -40,26 +44,33 @@
 </template>
 
 <script>
-import { BIconPersonPlusFill } from "bootstrap-vue";
 import BaseAlert from "@/components/BaseAlert.vue";
-import StudentAPI from '../api/students.js'
+import BaseSelectDistrict from "@/components/BaseSelectDistrict.vue";
+import BaseSelectGrade from "@/components/BaseSelectGrade.vue";
+import BaseSelectSchoolByDistrict from "@/components/BaseSelectSchoolByDistrict.vue";
+import { BIconPersonPlusFill } from "bootstrap-vue";
+import StudentAPI from '../api/student.js'
 
 export default {
+  name: "StudentCreateModal",
   components: {
     BIconPersonPlusFill,
     BaseAlert,
+    BaseSelectDistrict,
+    BaseSelectGrade,
+    BaseSelectSchoolByDistrict
   },
   data() {
     return {
       form: {
         first_name: "",
         last_name: "",
+        district: "",
         school_id: null,
         osis: "",
         birthdate: "",
         grade: "",
       },
-      gradeOptions: [],
       firstNameState: null,
       schoolIdState: null,
       showModalOverlay: false,
@@ -68,28 +79,19 @@ export default {
       showInformational: false,
     };
   },
-  mounted() {
-    this.buildGradeOption()
-  },
+
   methods: {
-    ordinal(n) {
-        if (n > 3 && n < 21) return "th"
-        switch (n % 10) {
-            case 1: return "st"
-            case 2: return "nd"
-            case 3: return "rd"
-            default: return "th"
-        }
+    handleDistrictChange(district) {
+      this.form.district = district
+      //school list will be updated as we have :key="form.district"
     },
 
-    buildGradeOption() {
-        //prob should getfrom back end database to keep in sync
-        let gradeOptions = [{ value: "3K", text: "3K" },{ value: "PK", text: "PreK" }]
-        let i
-        for (i = 1; i<=12; i++) {
-            gradeOptions.push({value: i.toString(), text: `${i}${this.ordinal(i)} Grade`})
-        }
-        this.gradeOptions = gradeOptions
+    handleGradeChange(grade) {
+      this.form.grade = grade
+    },
+
+    handleSchoolChange(schoolId) {
+      this.form.school_id = schoolId
     },
 
     checkFormValidity() {

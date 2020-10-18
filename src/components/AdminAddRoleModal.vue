@@ -18,7 +18,7 @@
         </b-form-group>
 
         <b-form-group label="District" label-for="district-select">
-            <b-form-select id="district-select" v-model="form.district" :options="districtOptions" @change="getSchools"></b-form-select>
+            <base-select-district @district-has-changed="handleDistrictChange" />  
         </b-form-group>
 
         <b-form-group label="School" label-for="school-select">
@@ -32,13 +32,16 @@
 
 <script>
 import BaseAlert from "@/components/BaseAlert.vue";
+import BaseSelectDistrict from "@/components/BaseSelectDistrict.vue";
 import { authComputed } from '../store/helpers.js'
 import AdminAPI from '../api/admin.js'
 import SchoolAPI from '../api/school.js'
 
 export default {
+    name: "AdminAddRoleModal",
     components: {
-        BaseAlert
+        BaseAlert,
+        BaseSelectDistrict
     },
     props: {
         userId: Number
@@ -61,20 +64,19 @@ export default {
             roleOptions: ['admin', 'provider', 'supervisor', 'principal', 'student'],
             countyOptions: ['Q', 'K', 'R', 'X', 'M'],
             serviceOptions: ["Speech", "OT", "PT"],
-            schoolOptions: [],
-            districtOptions: []
+            schoolOptions: []
         };
     },
     mounted() {
-        let i
-        let districts = []
-        for (i=1; i<33; i++) {
-            districts.push(i.toString())
-        }
-        districts.push("75")
-        this.districtOptions = districts
     },
+
     methods: {
+        handleDistrictChange(district) {
+            this.form.district = district;
+            //now go and set student lists jusing this value
+            this.getSchools()
+        },
+
         checkFormValidity() {
             //some checks before we actually submit name message
             const isValid = this.$refs.form.checkValidity();

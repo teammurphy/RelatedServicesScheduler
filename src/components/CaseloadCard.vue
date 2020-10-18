@@ -8,7 +8,7 @@
         </template>
     </b-table>
 
-    <case-add-modal v-bind:caseloadId="id"/>
+    <case-add-modal v-bind:caseloadId="id" @student-added-to-caseload="handleStudentAdded" />
     
 </b-card>
 </template>
@@ -17,7 +17,7 @@
 import BaseAlert from "@/components/BaseAlert.vue";
 import CaseAddModal from '@/components/CaseAddModal.vue'
 import { BIconTrash } from "bootstrap-vue";
-import StudentsAPI from '../api/students.js'
+import StudentsAPI from '../api/student.js'
 import CaseAPI from '../api/case.js'
 //the api call for the caseload should be in CaseloadAPI, but is currently in StudentsAPI
 //import CaseloadAPI from '../api/caseload.js'
@@ -51,6 +51,14 @@ export default {
     },
 
     methods: {
+        handleStudentAdded(student) {
+            //the CaseAddModal component has emitted a new student back
+            //either push into array, or refresh entire caseload
+            console.log("student added -" + JSON.stringify(student))
+            this.cases.push(student)
+            //this.getCaseload()
+        },
+
         async deleteCase(c) {
             const confirmDeletion = await this.$bvModal.msgBoxConfirm(`Are you sure you want to remove  ${c.item.first_name} ${c.item.last_name} from this caseload?`, {
                 title: 'Confirm Delete'
@@ -61,7 +69,7 @@ export default {
                 const payload = await CaseAPI.deleteCase(c.item.case_id)
                 if (payload.ok) {
                     this.alert = {}
-                    //refresh caseload list
+                    //either refresh entire caseload, or pull out the specific entry
                     this.getCaseload()
                 } else {
                     this.alert = {show:true, variant: "danger", name: payload.name, message: payload.message}

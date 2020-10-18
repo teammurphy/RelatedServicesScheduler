@@ -10,6 +10,12 @@ export default {
         return genericAPI.post(url,role)
     },
 
+    deleteRole(id) {
+        //given a role id, will blow it away
+        const url =  `${genericAPI.getAPIRoot()}admin/role/${id}`
+        return genericAPI.delete(url)
+    },
+
     getAllUsers() {
         //will return all users - used by admins to set roles and such
         const url =  `${genericAPI.getAPIRoot()}admin/users`

@@ -1,6 +1,5 @@
 <template>
 <b-container>
-
   <h1>Related Service Scheduler</h1>
   <p>
     A Vue.js app to manage related services scheduling.  Will be using fullcalendar
@@ -60,21 +59,9 @@
     created() {
       //now set the vuex breadcrumbs state so breadcrumbs are updated
       this.$store.dispatch('replaceBreadcrumbs', [
-        {
-          text: 'Home',
-          to: {name: 'home'}
-        },
-        {
-          text: 'About',
-          active: true
-        }
+        {text: 'Home', to: {name: 'home'}},
+        {text: 'About', active: true}
       ]);
-    },
-    methods: {
-      studentSelectHandler(student) {
-        //given a student by the StudentSelect component - do something
-        console.log(student.text)
-      }
     }
   }
 </script>

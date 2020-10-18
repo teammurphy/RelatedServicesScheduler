@@ -19,13 +19,13 @@
         </b-form-group>
 
         <b-form-group label="Select Student" label-for="student-select">
-            <student-select id="student-select" :schoolId="schoolId" v-on:studentSelected="studentSelectHandler" :key=schoolId />
+            <base-select-student-by-school v-bind:schoolId="schoolId" :key="schoolId" @student-has-changed="handleStudentChange" />
         </b-form-group>
 
         <b-button @click="createCase" variant="primary"><b-icon-plus ></b-icon-plus> Add {{ selectedStudent.full_name }} to Caseload</b-button>
 
         <b-nav align='end'>
-            <b-button variant="danger" @click="$bvModal.hide('case-add-modal')">Cancel</b-button>
+            <b-button variant="danger" @click="$bvModal.hide('case-add-modal')">Close</b-button>
         </b-nav>
     </b-modal>
 
@@ -34,7 +34,7 @@
 
 <script>
 import BaseAlert from "@/components/BaseAlert.vue";
-import StudentSelect from "@/components/StudentSelect.vue";
+import BaseSelectStudentBySchool from "@/components/BaseSelectStudentBySchool.vue";
 import { BIconPlus } from "bootstrap-vue";
 import { authComputed } from '../store/helpers.js'
 import CaseAPI from '../api/case.js'
@@ -43,7 +43,7 @@ export default {
     name: "CaseAddModal",
     components: {
         BaseAlert,
-        StudentSelect,
+        BaseSelectStudentBySchool,
         BIconPlus
     },
     props: {
@@ -56,9 +56,9 @@ export default {
         return {
             alert: {},
             schoolId: null,
-            studentsAddedToCaseload: [],
             selectedStudent: {},
-            schoolOptions: []
+            schoolOptions: [],
+            studentsAddedToCaseload: []
         };
     },
 
@@ -72,9 +72,7 @@ export default {
     },
 
     methods: {
-        studentSelectHandler(student) {
-            //given a student by the StudentSelect component - do something
-            console.log(student.text)
+        handleStudentChange(student) {
             this.selectedStudent = student
         },
 
@@ -98,6 +96,8 @@ export default {
                 this.alert = {}
                 //add to list of added students
                 this.studentsAddedToCaseload.push(this.selectedStudent.full_name)
+                //emit event back to parent so we can update caseload list
+                this.$emit("student-added-to-caseload", this.selectedStudent)
                 this.selectedStudent = {}
             } else {
                 this.alert = {show:true, variant: "danger", name: payload.name, message: payload.message}

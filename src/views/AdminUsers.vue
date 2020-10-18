@@ -3,7 +3,6 @@
     <h1>Admin - Users</h1>
 
     <admin-add-role-modal :userId="userId" />
-    <base-confirm-deleteModal v-bind="deleteObject" />
 
     <b-table striped hover :items="users">
       <template v-slot:cell(roles)="data">
@@ -22,7 +21,6 @@
 
 <script>
 import BaseAlert from "@/components/BaseAlert.vue";
-import BaseConfirmDeleteModal from '@/components/BaseConfirmDeleteModal.vue'
 import AdminAddRoleModal from '@/components/AdminAddRoleModal.vue'
 import { BIconPlus, BIconTrash } from "bootstrap-vue";
 import AdminAPI from '../api/admin.js'
@@ -30,33 +28,60 @@ import AdminAPI from '../api/admin.js'
 export default {
   components: {
     BaseAlert,
-    BaseConfirmDeleteModal,
     BIconPlus,
     BIconTrash,
     AdminAddRoleModal
   },
+
   data() {
     return {
       alert: {},
       users: [],
       userId: null,
-      //user: {}
-      deleteObject: {path:"", message:""},
     };
   },
+
+  created() {
+    //now set the vuex breadcrumbs state so breadcrumbs are updated
+    this.$store.dispatch("replaceBreadcrumbs", [
+      {
+        text: "Home",
+        to: { name: "home" },
+      },
+      {
+        text: "Users",
+        active: true,
+      },
+    ]);
+  },
+
+  mounted() {
+    this.loadUsers()
+  },
+
   methods: {
     openAddRoleModal(id) {
       this.userId = id
       this.$bvModal.show("role-add-modal")
     },
-    deleteRole(role) {
-      this.deleteObject = {
-        //id, path to delete the document, and a enough text to identify that we are deleting the right thing
-        message: `Are you sure you want to delete the ${role.name} role (${role.service} ${role.district}${role.county}${role.school})?`,
-        path: "admin/role/" + role.id
+   
+    async deleteRole(role) {
+      const confirmDeletion = await this.$bvModal.msgBoxConfirm(`Are you sure you want to delete the ${role.name} role (${role.service} ${role.district}${role.county}${role.school})`, {
+        title: 'Confirm Delete'
+        //other options here
+      })
+      if (confirmDeletion) {
+        this.alert = {show: true, showSpinner: true, variant: "info", name: "Deleting", message: "Deleting Role"}
+        const payload = await AdminAPI.deleteRole(role.id)
+        if (payload.ok) {
+          this.alert = {}
+          this.loadUsers()         
+        } else {
+          this.alert = {show:true, variant: "danger", name: payload.name, message: payload.message}
+        }
       }
-      this.$bvModal.show("base-confirm-delete-modal")
     },
+
     async loadUsers() {
       this.alert = {
         show: true,
@@ -73,22 +98,6 @@ export default {
         this.alert = {show:true, variant: "danger", name: payload.name, message: payload.message}
       }
     }
-  },
-  created() {
-    //now set the vuex breadcrumbs state so breadcrumbs are updated
-    this.$store.dispatch("replaceBreadcrumbs", [
-      {
-        text: "Home",
-        to: { name: "home" },
-      },
-      {
-        text: "Users",
-        active: true,
-      },
-    ]);
-  },
-  mounted() {
-    this.loadUsers()
-  },
-};
+  }
+}
 </script>

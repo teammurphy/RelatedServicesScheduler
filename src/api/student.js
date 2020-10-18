@@ -1,7 +1,7 @@
 /*
 *   All the api calls for students
 */
-import genericAPI from '../api/api.js'
+import genericAPI from './api.js'
 
 const apiRootURL = process.env.VUE_APP_ROOT_API
 
@@ -32,14 +32,8 @@ export default {
 
     getStudent(id) {
         //return one student
-        alert("in getStudent" + id)
-
-        //const userJSON = localStorage.getItem('user')
-        //const user = JSON.parse(userJSON)
-        //const token = JSON.parse(localStorage.getItem('user')).access_token
-        //alert("token: " + JSON.parse(localStorage.getItem('user')).access_token)
-        //alert(id + " - token: " + genericAPI.getToken())
-
+        const url = `${apiRootURL}student/${id}`
+        return genericAPI.get(url)
     },
 
     createStudent(student) {
@@ -49,8 +43,8 @@ export default {
 
     deleteStudent(id) {
         //given a student id, perform the deletion
-        //deletes should normally be done direct through api.js
-        alert("in deleteStudent" + id)
+        const url =  `${genericAPI.getAPIRoot()}student/${id}`
+        return genericAPI.delete(url)
     },
 
     getCaseloadStudents(id) {
