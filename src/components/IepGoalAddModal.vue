@@ -1,6 +1,6 @@
 <template>
 <div> 
-    <b-button v-b-modal.iep-goal-add-modal variant="primary">Add Goal</b-button>
+    <b-button v-b-modal.iep-goal-add-modal variant="primary"><b-icon-plus ></b-icon-plus> Add Goal</b-button>
 
     <b-modal id="iep-goal-add-modal" ref="iepGoalAddModal" title="Add Goal" @show="resetModal" header-bg-variant="primary" header-text-variant="white" @hidden="resetModal" @ok=handleOk>
         <base-alert v-bind="alert" />
@@ -33,11 +33,13 @@
 <script>
 import BaseAlert from "@/components/BaseAlert.vue";
 import IEPAPI from '../api/iep.js'
+import { BIconPlus } from "bootstrap-vue";
 
 export default {
     name: "IEPGoalAddModal",
     components: {
         BaseAlert,
+        BIconPlus
     },
     props: {
         iepId: Number

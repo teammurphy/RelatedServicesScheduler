@@ -17,6 +17,7 @@ import Users from '../views/Users.vue'
 import User from '../views/User.vue'
 import DemoFullCalendar from '../views/DemoFullCalendar.vue'
 import MandateScheduler from '../views/MandateScheduler.vue'
+import CaseloadScheduler from '../views/CaseloadScheduler.vue'
 import Dashboard from '../views/Dashboard.vue'
 
 Vue.use(VueRouter)
@@ -40,6 +41,19 @@ const routes = [
     component: ProviderMyCaseload,
     meta: { requiresAuth: true }
   },
+
+  {
+    path: '/mandate_scheduler/:caseloadId',
+    name: 'MandateScheduler',
+    component: MandateScheduler
+  },
+  
+  {
+    path: '/caseloadscheduler/:caseloadId',
+    name: 'caseloadscheduler',
+    component: CaseloadScheduler
+  },
+
   //admin views
   {
     path: '/adminusers',
@@ -63,11 +77,7 @@ const routes = [
     name: 'DemoFullCalendar',
     component: DemoFullCalendar
   },
-  {
-    path: '/mandate_scheduler/:caseloadId',
-    name: 'MandateScheduler',
-    component: MandateScheduler
-  },
+  
   {
     path: '/students',
     name: 'Students',

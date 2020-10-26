@@ -9,6 +9,12 @@ export default {
         const url =  `${genericAPI.getAPIRoot()}caseloads/user/${id}`
         return genericAPI.get(url)
     },
+
+    getCaseload(id) {
+        //return specific caseload
+        const url =  `${genericAPI.getAPIRoot()}caseload/${id}`
+        return genericAPI.get(url)
+    },
     
     addCaseload(caseload) {
         //given a caseload, let us put it in the databsae

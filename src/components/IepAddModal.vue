@@ -1,6 +1,6 @@
 <template>
 <div> 
-    <b-button v-b-modal.iep-add-modal variant="primary">Add IEP</b-button>
+    <b-button v-b-modal.iep-add-modal variant="primary"><b-icon-plus ></b-icon-plus> Add IEP</b-button>
 
     <b-modal id="iep-add-modal" ref="iepAddModal" title="Add IEP" @show="resetModal" header-bg-variant="primary" header-text-variant="white" @hidden="resetModal" @ok=handleOk>
         <base-alert v-bind="alert" />
@@ -24,12 +24,14 @@
 
 <script>
 import BaseAlert from "@/components/BaseAlert.vue";
+import { BIconPlus } from "bootstrap-vue";
 import IEPAPI from '../api/iep.js'
 
 export default {
     name: "IEPAddModal",
     components: {
         BaseAlert,
+        BIconPlus
     },
     props: {
         studentId: Number

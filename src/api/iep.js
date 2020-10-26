@@ -23,14 +23,28 @@ export default {
         return genericAPI.delete(url)
     },
 
+    //Goals
     createGoal(goal) {
         const url = `${apiRootURL}goal`
         return genericAPI.post(url, goal)
     },
 
+    deleteGoal(id) {
+        //given a IEP id, perform the deletion
+        const url =  `${genericAPI.getAPIRoot()}goal/${id}`
+        return genericAPI.delete(url)
+    },
+
+    //Mandates
     createMandate(mandate) {
         const url = `${apiRootURL}mandate`
         return genericAPI.post(url, mandate)
     },
+
+    deleteMandate(id) {
+        //given a IEP id, perform the deletion
+        const url =  `${genericAPI.getAPIRoot()}mandate/${id}`
+        return genericAPI.delete(url)
+    }
 
 }

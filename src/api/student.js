@@ -50,6 +50,11 @@ export default {
     getCaseloadStudents(id) {
         const url =  `${apiRootURL}students/caseload/${id}`
         return genericAPI.get(url)
+    },
+
+    getStudentMandates(id) {
+        const url =  `${apiRootURL}students/mandates/caseload/${id}`
+        return genericAPI.get(url)
     }
 
 }

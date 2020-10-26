@@ -36,6 +36,7 @@ import BaseSelectDistrict from "@/components/BaseSelectDistrict.vue";
 import { authComputed } from '../store/helpers.js'
 import AdminAPI from '../api/admin.js'
 import SchoolAPI from '../api/school.js'
+import configs from '../config.js'
 
 export default {
     name: "AdminAddRoleModal",
@@ -61,9 +62,9 @@ export default {
             },
             state: {name: null, school: null, district: null, county: null, service: null},
             alert: {},
-            roleOptions: ['admin', 'provider', 'supervisor', 'principal', 'student'],
-            countyOptions: ['Q', 'K', 'R', 'X', 'M'],
-            serviceOptions: ["Speech", "OT", "PT"],
+            roleOptions: configs.roleOptions,
+            countyOptions: configs.countyOptions,
+            serviceOptions: configs.serviceOptions,
             schoolOptions: []
         };
     },
