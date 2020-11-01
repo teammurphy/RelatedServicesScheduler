@@ -7,7 +7,7 @@
     </b-col>
 
     <b-col cols="10" class="mh-100 overflow-auto">
-      <MandateScheduler_Catcher v-bind:userId="user.id"/>
+      <caseload-scheduler-catcher v-bind:caseloadId="caseloadId"/>
     </b-col>
   </b-row>
 </div>
@@ -15,40 +15,41 @@
 
 <script>
 import CaseloadSchedulerPitcher from '@/components/CaseloadSchedulerPitcher.vue'
-import MandateScheduler_Catcher from '@/components/MandateScheduler_Catcher.vue'
+import CaseloadSchedulerCatcher from '@/components/CaseloadSchedulerCatcher.vue'
 import { authComputed } from '../store/helpers.js'
 
 export default {
-    computed: {
-        ...authComputed
-    },
-    data() {
-        return {
-            user: null,
-            caseloadId: parseInt(this.$route.params.caseloadId, 10)
-        }
-    },
-    components: {
-      CaseloadSchedulerPitcher,
-      MandateScheduler_Catcher
-    },
-
-    created() {
-        this.user = this.getStoreUser
-        this.displayBreadcrumbs();
-        
-    },
-    methods: {
-        displayBreadcrumbs() {
-            //now set the vuex breadcrumbs state so breadcrumbs are updated
-            this.$store.dispatch('replaceBreadcrumbs', [
-                {text: 'Home', to: {name: 'home'}},
-                {text: 'Users', to: {name: 'Users'}},
-                {text: "My Caseload", to: {name:'mycaseload'}},
-                {text: 'Caseload Scheduler', active: true}
-            ]);
-        },
-
+  name: "CaseloadScheduler",
+  computed: {
+      ...authComputed
+  },
+  data() {
+    return {
+      user: null,
+      caseloadId: parseInt(this.$route.params.caseloadId, 10)
     }
+  },
+  components: {
+    CaseloadSchedulerPitcher,
+    CaseloadSchedulerCatcher
+  },
+
+  created() {
+    this.user = this.getStoreUser
+    this.displayBreadcrumbs();    
+  },
+
+  methods: {
+    displayBreadcrumbs() {
+      //now set the vuex breadcrumbs state so breadcrumbs are updated
+      this.$store.dispatch('replaceBreadcrumbs', [
+        {text: 'Home', to: {name: 'home'}},
+        {text: 'Users', to: {name: 'Users'}},
+        {text: "My Caseload", to: {name:'mycaseload'}},
+        {text: 'Caseload Scheduler', active: true}
+      ]);
+    },
+
+  }
 }
 </script>

@@ -9,6 +9,7 @@ import FullCalendar from '@fullcalendar/vue'
 //import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
+import rrulePlugin from '@fullcalendar/rrule'
 
 export default {
   components: {
@@ -20,18 +21,33 @@ export default {
   data() {
     return {
       calendarOptions: {
-        plugins: [ timeGridPlugin, interactionPlugin ],
+        plugins: 
+          [ timeGridPlugin, interactionPlugin, 
+            rrulePlugin 
+          ],
         initialView: 'timeGridWeek',
         weekends: false,
         editable: true,
         droppable: true,
         eventDrop: this.handleEventDrop,
+        //eventAdd: this.handleEventAdd,
         eventReceive: this.handleEventReceive,
         eventChange: this.handleEventChange,
         events: [
-          {id: "001", title: "bogus", start: "2020-09-16T13:00:00"},
-          {id: "002", title: "bogus", start: "2020-09-16T10:00:00"},
-          {id: "003", title: "bogus", start: "2020-09-16T16:00:00"}
+          {
+            title: 'my recurring event',
+            duration: "02:45",
+            rrule: {
+              freq: 'weekly',
+              interval: 1,
+              byweekday: [ 'mo', 'fr' ],
+              dtstart: '2020-10-19T10:30:00', // will also accept '20120201T103000'
+              until: '2021-06-01' // will also accept '20120201'
+            }
+          },
+          {id: "001", title: "bogus1", start: "2020-10-30T13:00:00"},
+          {id: "002", title: "bogus2", start: "2020-10-30T10:00:00"},
+          {id: "003", title: "bogus3", start: "2020-10-30T16:00:00"}
         ]
       }
     }
@@ -48,13 +64,20 @@ export default {
         info.revert();
       }
     },
+
+    handleEventChange(info) {
+      alert("eventChange - " + JSON.stringify(info));
+    },
+
     handleEventReceive(info) {
       //fired when an external entry is received - before event add is fired
       alert("eventReceive - " + JSON.stringify(info));
     },
-    handleEventChange(info) {
-      alert("eventChange - " + JSON.stringify(info));
-    }
+    /*
+    handleEventAdd(info) {
+      alert("eventAdd - " + JSON.stringify(info));
+    },
+    */
   }
 }
 </script>
