@@ -55,6 +55,25 @@ export default {
         return this.genericFetch(request)
     },
 
+    put(url, data) {
+        const token = this.getToken()
+        let headers = new Headers()
+        headers.append('Content-Type', 'application/json')
+        //do we need this if we are using cors mode in the request?
+        //headers.append('Access-Control-Allow-Origin', '*')
+        if (token) {
+            headers.append('Authorization', `Bearer ${token}`)
+        }
+        const request = new Request(url, {
+            method: 'PUT',
+            headers: headers,
+            mode: 'cors',
+            cache: 'no-store',
+            body: JSON.stringify(data)
+        })
+        return this.genericFetch(request)
+    },
+
     get(url) {
         const token = this.getToken()
         let headers = new Headers()

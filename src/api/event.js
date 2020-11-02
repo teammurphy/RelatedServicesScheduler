@@ -8,7 +8,6 @@ const apiRootURL = process.env.VUE_APP_ROOT_API
 export default {
     /*
     getEvents
-    getEventsByCaseload
     getEventsByStudent
     getEventsByProvider
     */
@@ -16,5 +15,15 @@ export default {
     createEvent(event) {
         const url = `${apiRootURL}event`
         return genericAPI.post(url, event)
+    },
+    
+    getEventsByCaseload(id) {
+        const url = `${apiRootURL}events/caseload/${id}`
+        return genericAPI.get(url)
+    },
+
+    modifyEvent(id, event) {
+        const url = `${apiRootURL}event/${id}`
+        return genericAPI.put(url, event)
     }
 }

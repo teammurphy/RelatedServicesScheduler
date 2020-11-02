@@ -6,8 +6,7 @@
             :key="mandate.id" 
             variant="primary" 
             class="make-draggable"
-            :data-mandateId=mandate.id
-            :data-studentId=id
+            :data-mandate_id=mandate.id
             :data-periodicity=mandate.periodicity
             :data-frequency=mandate.frequency
             :data-service=mandate.service
@@ -65,7 +64,7 @@ export default {
                 //eventObj.id = node.dataset.id
                 let rrule = {}
                 rrule.freq = node.dataset.periodicity
-                rrule.interval = node.dataset.interval
+                rrule.interval = parseInt(node.dataset.interval)
                 //we need to pass in the end of the caseload period
                 //for now just repeat until end of school year
                 rrule.until = "2021-06-30"
@@ -80,11 +79,11 @@ export default {
                 //draggable does not handle rrules correctly in current version, 
                 //so need to pass through extended props to be picked up by the eventDrop
                 eventObj.extendedProps = rrule
-                eventObj.extendedProps.mandate_id = node.dataset.mandateId
+                eventObj.extendedProps.mandate_id = parseInt(node.dataset.mandate_id)
                 eventObj.extendedProps.student_id = this.id
                 eventObj.extendedProps.school_id = this.school_id
                 eventObj.extendedProps.service = node.dataset.service
-                eventObj.extendedProps.duration = node.dataset.duration
+                eventObj.extendedProps.duration = parseInt(node.dataset.duration)
 
 
                 new Draggable(node, {
